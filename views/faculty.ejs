@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard - Student Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { user }) %>
+
+        <div class="dashboard-container">
+            <div class="container">
+                <h1 class="text-white mb-4">👨‍🏫 Faculty Dashboard</h1>
+
+                <div class="row">
+                    <!-- Mark Attendance -->
+                    <div class="col-lg-8 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                ✅ Mark Attendance - <%= today %>
+                            </div>
+                            <div class="card-body">
+                                <% if (students.length> 0) { %>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Student Name</th>
+                                                    <th>Email</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% students.forEach(student=> { %>
+                                                    <tr>
+                                                        <td><strong>
+                                                                <%= student.fullname %>
+                                                            </strong></td>
+                                                        <td><small class="text-muted">
+                                                                <%= student.email %>
+                                                            </small></td>
+                                                        <td>
+                                                            <% const status=attendanceMap[student.id]; %>
+                                                                <% if (status==='present' ) { %>
+                                                                    <span class="badge bg-success">Present</span>
+                                                                    <% } else if (status==='absent' ) { %>
+                                                                        <span class="badge bg-danger">Absent</span>
+                                                                        <% } else { %>
+                                                                            <span class="badge bg-secondary">Not
+                                                                                Marked</span>
+                                                                            <% } %>
+                                                        </td>
+                                                        <td>
+                                                            <div class="btn-group btn-group-sm" role="group">
+                                                                <button type="button"
+                                                                    class="btn <%= status === 'present' ? 'btn-success' : 'btn-outline-success' %>"
+                                                                    data-student-id="<%= student.id %>"
+                                                                    data-status="present"
+                                                                    onclick="markAttendance(<%= student.id %>, 'present')">
+                                                                    ✓ Present
+                                                                </button>
+                                                                <button type="button"
+                                                                    class="btn <%= status === 'absent' ? 'btn-danger' : 'btn-outline-danger' %>"
+                                                                    data-student-id="<%= student.id %>"
+                                                                    data-status="absent"
+                                                                    onclick="markAttendance(<%= student.id %>, 'absent')">
+                                                                    ✗ Absent
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <% }); %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <% } else { %>
+                                        <p class="text-muted text-center py-4">No students enrolled.</p>
+                                        <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                📊 Quick Stats
+                            </div>
+                            <div class="card-body">
+                                <div class="stat-card text-center mb-3">
+                                    <div class="stat-icon primary mx-auto">👥</div>
+                                    <h3>
+                                        <%= students.length %>
+                                    </h3>
+                                    <small class="text-muted">Total Students</small>
+                                </div>
+
+                                <div class="stat-card text-center mb-3">
+                                    <div class="stat-icon success mx-auto">✅</div>
+                                    <h3>
+                                        <%= Object.values(attendanceMap).filter(s=> s === 'present').length %>
+                                    </h3>
+                                    <small class="text-muted">Present Today</small>
+                                </div>
+
+                                <div class="stat-card text-center">
+                                    <div class="stat-icon danger mx-auto">❌</div>
+                                    <h3>
+                                        <%= Object.values(attendanceMap).filter(s=> s === 'absent').length %>
+                                    </h3>
+                                    <small class="text-muted">Absent Today</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Marks -->
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                📝 Submit Marks
+                            </div>
+                            <div class="card-body">
+                                <form onsubmit="submitMarks(event)">
+                                    <div class="mb-3">
+                                        <label for="student_id" class="form-label">Select Student</label>
+                                        <select class="form-select" id="student_id" name="student_id" required>
+                                            <option value="">Choose a student...</option>
+                                            <% students.forEach(student=> { %>
+                                                <option value="<%= student.id %>">
+                                                    <%= student.fullname %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="subject" class="form-label">Subject</label>
+                                        <select class="form-select" id="subject" name="subject" required>
+                                            <option value="">Choose a subject...</option>
+                                            <option value="Mathematics">Mathematics</option>
+                                            <option value="Physics">Physics</option>
+                                            <option value="Chemistry">Chemistry</option>
+                                            <option value="English">English</option>
+                                            <option value="Computer Science">Computer Science</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="marks" class="form-label">Marks (out of 100)</label>
+                                        <input type="number" class="form-control" id="marks" name="marks" min="0"
+                                            max="100" required placeholder="Enter marks">
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary w-100">Submit Marks</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                📋 Recent Activity
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group list-group-flush">
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">Attendance Marked</h6>
+                                                <small class="text-muted">Marked attendance for <%= today %></small>
+                                            </div>
+                                            <small class="text-muted">Today</small>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">Marks Submitted</h6>
+                                                <small class="text-muted">Chemistry marks uploaded</small>
+                                            </div>
+                                            <small class="text-muted">2 days ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">Assignment Graded</h6>
+                                                <small class="text-muted">Mathematics assignment reviewed</small>
+                                            </div>
+                                            <small class="text-muted">3 days ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/charts.js"></script>
+</body>
+
+</html>

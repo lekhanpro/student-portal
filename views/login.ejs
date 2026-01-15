@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Student Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="card login-card">
+            <div class="card-body p-5">
+                <div class="school-logo">🎓</div>
+                <h2 class="text-center mb-1">Student Portal</h2>
+                <p class="text-center text-muted mb-4">Welcome back! Please login to continue</p>
+
+                <% if (error) { %>
+                    <div class="alert alert-danger" role="alert">
+                        ⚠️ <%= error %>
+                    </div>
+                    <% } %>
+
+                        <form action="/login" method="POST">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" required
+                                    placeholder="Enter your email">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required
+                                    placeholder="Enter your password">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                        </form>
+
+                        <div class="credentials-hint">
+                            <h6>📋 Demo Credentials</h6>
+                            <div class="mb-2">
+                                <strong>Admin:</strong> <code>admin@school.com</code> / <code>admin123</code>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Faculty:</strong> <code>teacher@school.com</code> / <code>teach123</code>
+                            </div>
+                            <div>
+                                <strong>Student:</strong> <code>student@school.com</code> / <code>student123</code>
+                            </div>
+                        </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
