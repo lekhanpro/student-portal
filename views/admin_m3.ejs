@@ -17,33 +17,12 @@
             theme: {
                 extend: {
                     colors: {
-                        slate: {
-                            750: '#293548',
-                            850: '#172033',
-                            950: '#0d1624',
-                        },
-                        brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                        },
-                        emerald: {
-                            50: '#ecfdf5',
-                            500: '#10b981',
-                        },
-                        amber: {
-                            50: '#fffbeb',
-                            500: '#f59e0b',
-                        },
-                        rose: {
-                            50: '#fff1f2',
-                            500: '#f43f5e',
-                        }
+                        brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5' },
+                        emerald: { 50: '#ecfdf5', 500: '#10b981' },
+                        amber: { 50: '#fffbeb', 500: '#f59e0b' },
+                        rose: { 50: '#fff1f2', 500: '#f43f5e' }
                     },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
             }
         }
@@ -70,6 +49,11 @@
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
         }
 
+        .tab-active {
+            border-bottom: 2px solid #6366f1;
+            color: #6366f1;
+        }
+
         @keyframes pulse-slow {
 
             0%,
@@ -92,7 +76,6 @@
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
         <aside class="hidden lg:flex flex-col w-64 bg-white border-r border-gray-200 p-4">
-            <!-- Logo -->
             <div class="flex items-center gap-3 px-3 py-4 mb-6">
                 <div class="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center">
                     <span class="material-symbols-outlined text-white text-xl">admin_panel_settings</span>
@@ -103,7 +86,6 @@
                 </div>
             </div>
 
-            <!-- Profile -->
             <div class="bg-gray-100 rounded-2xl p-4 mb-6">
                 <div class="flex items-center gap-3">
                     <div
@@ -119,44 +101,36 @@
                 </div>
             </div>
 
-            <!-- Navigation -->
             <nav class="flex-1 space-y-1">
-                <a href="/"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-50 text-brand-600 font-medium transition-all">
+                <a href="#overview" onclick="showTab('overview')"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-50 text-brand-600 font-medium">
                     <span class="material-symbols-outlined filled text-xl">dashboard</span>
                     <span class="text-sm">Dashboard</span>
                 </a>
-                <a href="#users"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all">
-                    <span class="material-symbols-outlined text-xl">group</span>
-                    <span class="text-sm">Users</span>
+                <a href="#add-user" onclick="showTab('add-user')"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100">
+                    <span class="material-symbols-outlined text-xl">person_add</span>
+                    <span class="text-sm">Add User</span>
                 </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all">
+                <a href="#students" onclick="showTab('students')"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100">
                     <span class="material-symbols-outlined text-xl">school</span>
-                    <span class="text-sm">Departments</span>
+                    <span class="text-sm">Students</span>
                 </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all">
-                    <span class="material-symbols-outlined text-xl">menu_book</span>
-                    <span class="text-sm">Courses</span>
+                <a href="#faculty" onclick="showTab('faculty')"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100">
+                    <span class="material-symbols-outlined text-xl">badge</span>
+                    <span class="text-sm">Faculty</span>
                 </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all">
-                    <span class="material-symbols-outlined text-xl">analytics</span>
-                    <span class="text-sm">Analytics</span>
-                </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 transition-all">
-                    <span class="material-symbols-outlined text-xl">settings</span>
-                    <span class="text-sm">Settings</span>
+                <a href="#all-users" onclick="showTab('all-users')"
+                    class="nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100">
+                    <span class="material-symbols-outlined text-xl">group</span>
+                    <span class="text-sm">All Users</span>
                 </a>
             </nav>
 
-            <!-- Logout -->
             <div class="border-t border-gray-200 pt-4">
-                <a href="/logout"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-rose-500 hover:bg-rose-50 transition-all">
+                <a href="/logout" class="flex items-center gap-3 px-4 py-3 rounded-xl text-rose-500 hover:bg-rose-50">
                     <span class="material-symbols-outlined text-xl">logout</span>
                     <span class="text-sm font-medium">Logout</span>
                 </a>
@@ -164,306 +138,381 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto">
-            <!-- Header -->
+        <main class="flex-1 overflow-y-auto pb-20 lg:pb-6">
             <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-gray-200 px-6 py-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-4">
-                        <button class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                        <button class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
                             <span class="material-symbols-outlined">menu</span>
                         </button>
                         <div>
                             <h2 class="text-xl font-semibold text-gray-900">Admin Dashboard</h2>
-                            <p class="text-sm text-gray-500">System overview and management</p>
+                            <p class="text-sm text-gray-500">Manage users and system settings</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 text-sm">
-                            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse-slow"></span>
-                            System Online
-                        </div>
-                        <button class="relative p-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 transition-colors">
-                            <span class="material-symbols-outlined text-gray-600">notifications</span>
-                            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
-                        </button>
+                    <div
+                        class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-600 text-sm">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse-slow"></span>
+                        System Online
                     </div>
                 </div>
             </header>
 
-            <!-- Content -->
             <div class="p-6 space-y-6">
-                <!-- Stats -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div
-                        class="bg-white rounded-2xl p-5 card-shadow card-hover transition-all duration-300 border-l-4 border-brand-500">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 mb-1">Total Users</p>
-                                <p class="text-3xl font-bold text-gray-900">
-                                    <%= users.length %>
-                                </p>
-                            </div>
-                            <div class="p-3 rounded-xl bg-brand-50">
-                                <span class="material-symbols-outlined text-brand-500">group</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 flex items-center gap-2">
-                            <span class="text-xs text-emerald-500 font-medium flex items-center gap-1">
-                                <span class="material-symbols-outlined text-sm">trending_up</span>
-                                +3 new
-                            </span>
-                            <span class="text-xs text-gray-400">this week</span>
-                        </div>
-                    </div>
-
-                    <div
-                        class="bg-white rounded-2xl p-5 card-shadow card-hover transition-all duration-300 border-l-4 border-blue-500">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 mb-1">Students</p>
-                                <p class="text-3xl font-bold text-gray-900">
-                                    <%= users.filter(u=> u.role === 'student').length %>
-                                </p>
-                            </div>
-                            <div class="p-3 rounded-xl bg-blue-50">
-                                <span class="material-symbols-outlined text-blue-500">school</span>
+                <!-- Overview Tab -->
+                <div id="tab-overview" class="tab-content">
+                    <!-- Stats -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-white rounded-2xl p-5 card-shadow card-hover border-l-4 border-brand-500">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 mb-1">Total Users</p>
+                                    <p class="text-3xl font-bold text-gray-900">
+                                        <%= users.length %>
+                                    </p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-brand-50">
+                                    <span class="material-symbols-outlined text-brand-500">group</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="mt-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-blue-500 rounded-full"
-                                style="width: <%= (users.filter(u => u.role === 'student').length / users.length * 100) %>%">
+                        <div class="bg-white rounded-2xl p-5 card-shadow card-hover border-l-4 border-blue-500">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 mb-1">Students</p>
+                                    <p class="text-3xl font-bold text-gray-900">
+                                        <%= users.filter(u=> u.role === 'student').length %>
+                                    </p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-blue-50">
+                                    <span class="material-symbols-outlined text-blue-500">school</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div
-                        class="bg-white rounded-2xl p-5 card-shadow card-hover transition-all duration-300 border-l-4 border-emerald-500">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 mb-1">Faculty</p>
-                                <p class="text-3xl font-bold text-gray-900">
-                                    <%= users.filter(u=> u.role === 'faculty').length %>
-                                </p>
-                            </div>
-                            <div class="p-3 rounded-xl bg-emerald-50">
-                                <span class="material-symbols-outlined text-emerald-500">badge</span>
+                        <div class="bg-white rounded-2xl p-5 card-shadow card-hover border-l-4 border-emerald-500">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 mb-1">Faculty</p>
+                                    <p class="text-3xl font-bold text-gray-900">
+                                        <%= users.filter(u=> u.role === 'faculty').length %>
+                                    </p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-emerald-50">
+                                    <span class="material-symbols-outlined text-emerald-500">badge</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="mt-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-emerald-500 rounded-full"
-                                style="width: <%= (users.filter(u => u.role === 'faculty').length / users.length * 100) %>%">
+                        <div class="bg-white rounded-2xl p-5 card-shadow card-hover border-l-4 border-amber-500">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 mb-1">Admins</p>
+                                    <p class="text-3xl font-bold text-gray-900">
+                                        <%= users.filter(u=> u.role === 'admin').length %>
+                                    </p>
+                                </div>
+                                <div class="p-3 rounded-xl bg-amber-50">
+                                    <span class="material-symbols-outlined text-amber-500">admin_panel_settings</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div
-                        class="bg-white rounded-2xl p-5 card-shadow card-hover transition-all duration-300 border-l-4 border-amber-500">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 mb-1">Admins</p>
-                                <p class="text-3xl font-bold text-gray-900">
-                                    <%= users.filter(u=> u.role === 'admin').length %>
-                                </p>
-                            </div>
-                            <div class="p-3 rounded-xl bg-amber-50">
-                                <span class="material-symbols-outlined text-amber-500">admin_panel_settings</span>
-                            </div>
+                    <!-- Charts -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-2xl card-shadow p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">User Distribution</h3>
+                            <div class="h-64"><canvas id="userDistributionChart"></canvas></div>
                         </div>
-                        <div class="mt-3 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-amber-500 rounded-full"
-                                style="width: <%= (users.filter(u => u.role === 'admin').length / users.length * 100) %>%">
-                            </div>
+                        <div class="bg-white rounded-2xl card-shadow p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Enrollment Trend</h3>
+                            <div class="h-64"><canvas id="enrollmentChart"></canvas></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Charts Row -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- User Distribution -->
-                    <div class="bg-white rounded-2xl card-shadow p-6">
-                        <div class="flex items-center justify-between mb-6">
+                <!-- Add User Tab -->
+                <div id="tab-add-user" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl card-shadow overflow-hidden max-w-2xl">
+                        <div class="px-6 py-4 border-b border-gray-200 gradient-brand">
+                            <h3 class="text-lg font-semibold text-white">Add New User</h3>
+                            <p class="text-sm text-white/80">Create a new student, faculty, or admin account</p>
+                        </div>
+                        <form action="/admin/add-user" method="POST" class="p-6 space-y-4">
                             <div>
-                                <h3 class="text-lg font-semibold text-gray-900">User Distribution</h3>
-                                <p class="text-sm text-gray-500">By role</p>
-                            </div>
-                        </div>
-                        <div class="h-64">
-                            <canvas id="userDistributionChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Enrollment Trend -->
-                    <div class="bg-white rounded-2xl card-shadow p-6">
-                        <div class="flex items-center justify-between mb-6">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-900">Enrollment Trend</h3>
-                                <p class="text-sm text-gray-500">Last 6 months</p>
-                            </div>
-                        </div>
-                        <div class="h-64">
-                            <canvas id="enrollmentChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Add User Form -->
-                <div class="bg-white rounded-2xl card-shadow overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-brand-500 to-purple-500">
-                        <h3 class="text-lg font-semibold text-white">Add New User</h3>
-                        <p class="text-sm text-white/80">Create a new account for a student, faculty, or admin</p>
-                    </div>
-                    <form action="/admin/add-user" method="POST" class="p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                                <input type="text" name="fullname" required placeholder="John Doe"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all" />
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                                <input type="text" name="fullname" required placeholder="Enter full name"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
                                 <input type="email" name="email" required placeholder="user@school.com"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all" />
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                                <input type="password" name="password" required placeholder="••••••••"
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all" />
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Password *</label>
+                                <input type="password" name="password" required placeholder="Create a password"
+                                    minlength="6"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-100" />
+                                <p class="text-xs text-gray-500 mt-1">Minimum 6 characters</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Role *</label>
                                 <select name="role" required
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all bg-white">
-                                    <option value="">Select Role...</option>
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 bg-white">
+                                    <option value="">Select a role...</option>
                                     <option value="student">Student</option>
                                     <option value="faculty">Faculty</option>
                                     <option value="admin">Admin</option>
                                 </select>
                             </div>
-                            <div class="flex items-end">
-                                <button type="submit"
-                                    class="w-full px-6 py-3 gradient-brand text-white font-medium rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                                    <span class="material-symbols-outlined text-xl">person_add</span>
-                                    Add User
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                            <button type="submit"
+                                class="w-full px-6 py-3 gradient-brand text-white font-medium rounded-xl hover:opacity-90 flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined">person_add</span>
+                                Create User Account
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
-                <!-- Users Table -->
-                <div id="users" class="bg-white rounded-2xl card-shadow overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900">User Management</h3>
-                            <p class="text-sm text-gray-500">
-                                <%= users.length %> users registered
-                            </p>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="relative">
-                                <span
-                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</span>
-                                <input type="text" placeholder="Search users..."
-                                    class="pl-10 pr-4 py-2 rounded-xl border border-gray-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition-all w-64" />
+                <!-- Students Tab -->
+                <div id="tab-students" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-blue-50">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-blue-500 text-2xl">school</span>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Student Database</h3>
+                                    <p class="text-sm text-gray-500">
+                                        <%= users.filter(u=> u.role === 'student').length %> students enrolled
+                                    </p>
+                                </div>
                             </div>
-                            <select class="px-4 py-2 rounded-xl border border-gray-300 text-sm bg-white">
-                                <option>All Roles</option>
-                                <option>Students</option>
-                                <option>Faculty</option>
-                                <option>Admins</option>
-                            </select>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">ID
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                                            Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                                            Email</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                                            Status</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">
+                                            Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <% users.filter(u=> u.role === 'student').forEach(student => { %>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 text-sm text-gray-500">#<%= student.id %>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div
+                                                        class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold">
+                                                        <%= student.fullname.charAt(0) %>
+                                                    </div>
+                                                    <span class="font-medium text-gray-900">
+                                                        <%= student.fullname %>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 text-sm text-gray-600">
+                                                <%= student.email %>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <span
+                                                    class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                                                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>Active
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 text-right">
+                                                <form action="/admin/delete-user" method="POST" class="inline"
+                                                    onsubmit="return confirm('Delete <%= student.fullname %>?')">
+                                                    <input type="hidden" name="user_id" value="<%= student.id %>" />
+                                                    <button type="submit"
+                                                        class="p-2 rounded-lg hover:bg-rose-50 text-gray-400 hover:text-rose-500">
+                                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                            <% if(users.filter(u=> u.role === 'student').length === 0) { %>
+                                <div class="p-8 text-center text-gray-500">
+                                    <span class="material-symbols-outlined text-4xl mb-2">school</span>
+                                    <p>No students found</p>
+                                </div>
+                                <% } %>
                         </div>
                     </div>
+                </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="bg-gray-50">
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        User</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Email</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Role</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Status</th>
-                                    <th
-                                        class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                <% users.forEach((u, index)=> {
-                                    const roleColors = {
-                                    student: { bg: 'bg-blue-50', text: 'text-blue-600', gradient: 'from-blue-500
-                                    to-cyan-500' },
-                                    faculty: { bg: 'bg-emerald-50', text: 'text-emerald-600', gradient:
-                                    'from-emerald-500 to-teal-500' },
-                                    admin: { bg: 'bg-amber-50', text: 'text-amber-600', gradient: 'from-amber-500
-                                    to-orange-500' }
-                                    };
-                                    const colors = roleColors[u.role] || roleColors.student;
-                                    %>
-                                    <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-6 py-4">
-                                            <div class="flex items-center gap-3">
-                                                <div
-                                                    class="w-10 h-10 rounded-full bg-gradient-to-br <%= colors.gradient %> flex items-center justify-center text-white font-semibold text-sm">
-                                                    <%= u.fullname.charAt(0) %>
+                <!-- Faculty Tab -->
+                <div id="tab-faculty" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-emerald-50">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-emerald-500 text-2xl">badge</span>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Faculty Database</h3>
+                                    <p class="text-sm text-gray-500">
+                                        <%= users.filter(u=> u.role === 'faculty').length %> faculty members
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">ID
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                                            Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                                            Email</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                                            Status</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">
+                                            Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <% users.filter(u=> u.role === 'faculty').forEach(faculty => { %>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 text-sm text-gray-500">#<%= faculty.id %>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div
+                                                        class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-xs font-bold">
+                                                        <%= faculty.fullname.charAt(0) %>
+                                                    </div>
+                                                    <span class="font-medium text-gray-900">
+                                                        <%= faculty.fullname %>
+                                                    </span>
                                                 </div>
-                                                <div>
-                                                    <p class="font-medium text-gray-900">
-                                                        <%= u.fullname %>
-                                                    </p>
-                                                    <p class="text-xs text-gray-500">ID: #<%= u.id %>
-                                                    </p>
+                                            </td>
+                                            <td class="px-6 py-4 text-sm text-gray-600">
+                                                <%= faculty.email %>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <span
+                                                    class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                                                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>Active
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 text-right">
+                                                <form action="/admin/delete-user" method="POST" class="inline"
+                                                    onsubmit="return confirm('Delete <%= faculty.fullname %>?')">
+                                                    <input type="hidden" name="user_id" value="<%= faculty.id %>" />
+                                                    <button type="submit"
+                                                        class="p-2 rounded-lg hover:bg-rose-50 text-gray-400 hover:text-rose-500">
+                                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                            <% if(users.filter(u=> u.role === 'faculty').length === 0) { %>
+                                <div class="p-8 text-center text-gray-500">
+                                    <span class="material-symbols-outlined text-4xl mb-2">badge</span>
+                                    <p>No faculty found</p>
+                                </div>
+                                <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Users Tab -->
+                <div id="tab-all-users" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-900">All Users</h3>
+                            <p class="text-sm text-gray-500">
+                                <%= users.length %> total users
+                            </p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                                            User</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                                            Email</th>
+                                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
+                                            Role</th>
+                                        <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">
+                                            Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <% users.forEach(u=> {
+                                        const colors = {
+                                        student: 'from-blue-500 to-cyan-500',
+                                        faculty: 'from-emerald-500 to-teal-500',
+                                        admin: 'from-amber-500 to-orange-500'
+                                        };
+                                        const badges = {
+                                        student: 'bg-blue-50 text-blue-600',
+                                        faculty: 'bg-emerald-50 text-emerald-600',
+                                        admin: 'bg-amber-50 text-amber-600'
+                                        };
+                                        %>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div
+                                                        class="w-10 h-10 rounded-full bg-gradient-to-br <%= colors[u.role] %> flex items-center justify-center text-white font-bold">
+                                                        <%= u.fullname.charAt(0) %>
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-medium text-gray-900">
+                                                            <%= u.fullname %>
+                                                        </p>
+                                                        <p class="text-xs text-gray-500">ID: #<%= u.id %>
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-gray-600">
-                                            <%= u.email %>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium <%= colors.bg %> <%= colors.text %> capitalize">
-                                                <%= u.role %>
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <span
-                                                class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
-                                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
-                                                Active
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <div class="flex items-center justify-end gap-2">
-                                                <button
-                                                    class="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-700">
-                                                    <span class="material-symbols-outlined text-xl">edit</span>
-                                                </button>
+                                            </td>
+                                            <td class="px-6 py-4 text-sm text-gray-600">
+                                                <%= u.email %>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <span
+                                                    class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium <%= badges[u.role] %> capitalize">
+                                                    <%= u.role %>
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 text-right">
                                                 <% if (u.id !==user.id) { %>
                                                     <form action="/admin/delete-user" method="POST" class="inline"
                                                         onsubmit="return confirm('Delete <%= u.fullname %>?')">
                                                         <input type="hidden" name="user_id" value="<%= u.id %>" />
                                                         <button type="submit"
-                                                            class="p-2 rounded-lg hover:bg-rose-50 transition-colors text-gray-500 hover:text-rose-500">
+                                                            class="p-2 rounded-lg hover:bg-rose-50 text-gray-400 hover:text-rose-500">
                                                             <span
-                                                                class="material-symbols-outlined text-xl">delete</span>
+                                                                class="material-symbols-outlined text-lg">delete</span>
                                                         </button>
                                                     </form>
-                                                    <% } %>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <% }); %>
-                            </tbody>
-                        </table>
+                                                    <% } else { %>
+                                                        <span class="text-xs text-gray-400">Current User</span>
+                                                        <% } %>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -471,23 +520,23 @@
     </div>
 
     <!-- Mobile Bottom Nav -->
-    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 py-2 z-50">
         <div class="flex items-center justify-around">
-            <a href="/" class="flex flex-col items-center gap-1 text-brand-500">
+            <a href="#overview" onclick="showTab('overview')" class="flex flex-col items-center gap-1 text-brand-500">
                 <span class="material-symbols-outlined filled text-xl">dashboard</span>
                 <span class="text-[10px] font-medium">Home</span>
             </a>
-            <a href="#users" class="flex flex-col items-center gap-1 text-gray-400">
-                <span class="material-symbols-outlined text-xl">group</span>
-                <span class="text-[10px] font-medium">Users</span>
+            <a href="#add-user" onclick="showTab('add-user')" class="flex flex-col items-center gap-1 text-gray-400">
+                <span class="material-symbols-outlined text-xl">person_add</span>
+                <span class="text-[10px] font-medium">Add</span>
             </a>
-            <a href="#" class="flex flex-col items-center gap-1 text-gray-400">
-                <span class="material-symbols-outlined text-xl">analytics</span>
-                <span class="text-[10px] font-medium">Analytics</span>
+            <a href="#students" onclick="showTab('students')" class="flex flex-col items-center gap-1 text-gray-400">
+                <span class="material-symbols-outlined text-xl">school</span>
+                <span class="text-[10px] font-medium">Students</span>
             </a>
-            <a href="#" class="flex flex-col items-center gap-1 text-gray-400">
-                <span class="material-symbols-outlined text-xl">settings</span>
-                <span class="text-[10px] font-medium">Settings</span>
+            <a href="#faculty" onclick="showTab('faculty')" class="flex flex-col items-center gap-1 text-gray-400">
+                <span class="material-symbols-outlined text-xl">badge</span>
+                <span class="text-[10px] font-medium">Faculty</span>
             </a>
             <a href="/logout" class="flex flex-col items-center gap-1 text-gray-400">
                 <span class="material-symbols-outlined text-xl">logout</span>
@@ -497,14 +546,31 @@
     </nav>
 
     <script>
-        // User Distribution Chart
-        const users = <% - JSON.stringify(users) %>;
-        const studentCount = users.filter(u => u.role === 'student').length;
-        const facultyCount = users.filter(u => u.role === 'faculty').length;
-        const adminCount = users.filter(u => u.role === 'admin').length;
+        // Tab Navigation
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
 
-        const ctx1 = document.getElementById('userDistributionChart').getContext('2d');
-        new Chart(ctx1, {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('bg-brand-50', 'text-brand-600', 'font-medium');
+                link.classList.add('text-gray-600', 'hover:bg-gray-100');
+            });
+
+            const activeLink = document.querySelector(`a[href="#${tabId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('bg-brand-50', 'text-brand-600', 'font-medium');
+                activeLink.classList.remove('text-gray-600', 'hover:bg-gray-100');
+            }
+        }
+
+        // Charts
+        const usersData = <% - JSON.stringify(users) %>;
+        const studentCount = usersData.filter(u => u.role === 'student').length;
+        const facultyCount = usersData.filter(u => u.role === 'faculty').length;
+        const adminCount = usersData.filter(u => u.role === 'admin').length;
+
+        // User Distribution Chart
+        new Chart(document.getElementById('userDistributionChart'), {
             type: 'doughnut',
             data: {
                 labels: ['Students', 'Faculty', 'Admins'],
@@ -512,7 +578,7 @@
                     data: [studentCount, facultyCount, adminCount],
                     backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
                     borderWidth: 0,
-                    spacing: 4,
+                    spacing: 4
                 }]
             },
             options: {
@@ -520,52 +586,41 @@
                 maintainAspectRatio: false,
                 cutout: '65%',
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { usePointStyle: true, padding: 20, font: { size: 12 } }
-                    }
+                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15 } }
                 }
             }
         });
 
-        // Enrollment Trend Chart
-        const ctx2 = document.getElementById('enrollmentChart').getContext('2d');
-        new Chart(ctx2, {
+        // Enrollment Chart
+        new Chart(document.getElementById('enrollmentChart'), {
             type: 'line',
             data: {
                 labels: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
                 datasets: [{
-                    label: 'Enrollments',
-                    data: [12, 19, 25, 32, 38, users.length],
+                    label: 'Users',
+                    data: [5, 12, 18, 25, 32, usersData.length],
                     borderColor: '#6366f1',
                     backgroundColor: 'rgba(99, 102, 241, 0.1)',
                     fill: true,
                     tension: 0.4,
-                    pointBackgroundColor: '#6366f1',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
+                    pointRadius: 4
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
+                plugins: { legend: { display: false } },
                 scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#9ca3af', font: { size: 11 } }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(0,0,0,0.05)' },
-                        ticks: { color: '#9ca3af', font: { size: 11 } }
-                    }
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }
                 }
             }
         });
+
+        // Check URL hash on load
+        if (window.location.hash) {
+            showTab(window.location.hash.substring(1));
+        }
     </script>
 </body>
 
