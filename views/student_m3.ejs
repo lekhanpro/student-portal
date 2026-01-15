@@ -1,66 +1,54 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Student Dashboard - Student Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    <title>Student Dashboard - EduPortal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script id="tailwind-config">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
         tailwind.config = {
-            darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "m3-surface": "#111318",
-                        "m3-surface-container": "#1d2024",
-                        "m3-surface-container-high": "#282a2f",
-                        "m3-on-surface": "#e2e2e9",
-                        "m3-on-surface-variant": "#c4c7d0",
-                        "m3-outline": "#8e9099",
-                        "m3-primary": "#a8c7fa",
-                        "m3-on-primary": "#002f65",
-                        "m3-primary-container": "#00478f",
-                        "m3-on-primary-container": "#d7e3ff",
-                        "m3-secondary": "#7fcfff",
-                        "m3-on-secondary": "#003355",
-                        "m3-secondary-container": "#004b73",
-                        "m3-on-secondary-container": "#cce5ff",
-                        "m3-tertiary": "#dcbce9",
-                        "m3-tertiary-container": "#563e63",
-                        "m3-on-tertiary-container": "#f8d8ff",
-                        "m3-error": "#ffb4ab",
+                        dark: {
+                            900: '#0a0a0f',
+                            800: '#12121a',
+                            700: '#1a1a24',
+                            600: '#22222e',
+                            500: '#2a2a38',
+                        },
+                        accent: {
+                            blue: '#60a5fa',
+                            green: '#34d399',
+                            purple: '#a78bfa',
+                            orange: '#fb923c',
+                            pink: '#f472b6',
+                            cyan: '#22d3ee',
+                        }
                     },
                     fontFamily: {
-                        "sans": ["Roboto", "sans-serif"],
+                        sans: ['Inter', 'sans-serif'],
                     },
-                    boxShadow: {
-                        'm3-elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30)',
-                        'm3-elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30)',
-                    }
-                },
-            },
+                }
+            }
         }
     </script>
     <style>
-        .nav-item.active .icon-container {
-            background-color: theme('colors.m3-secondary-container');
-            color: theme('colors.m3-on-secondary-container');
-        }
-
-        .nav-item.active span.material-symbols-outlined {
-            font-variation-settings: 'FILL' 1, 'wght' 600;
-        }
-
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400;
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #2a2a38 transparent;
         }
 
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
+            height: 6px;
         }
 
         ::-webkit-scrollbar-track {
@@ -68,315 +56,581 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #44474d;
-            border-radius: 4px;
+            background: #2a2a38;
+            border-radius: 3px;
+        }
+
+        .glass {
+            background: rgba(26, 26, 36, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(26, 26, 36, 0.9) 0%, rgba(18, 18, 26, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.15);
+        }
+
+        .glow-green {
+            box-shadow: 0 0 20px rgba(52, 211, 153, 0.15);
+        }
+
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.15);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.15) 0%, rgba(96, 165, 250, 0.05) 100%);
+        }
+
+        .nav-item.active .nav-icon {
+            color: #60a5fa;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .filled {
+            font-variation-settings: 'FILL' 1, 'wght' 500;
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-count {
+            animation: countUp 0.5s ease-out forwards;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
 
-<body
-    class="bg-m3-surface text-m3-on-surface font-sans h-screen flex overflow-hidden selection:bg-m3-primary selection:text-m3-on-primary">
-    <!-- Desktop Navigation Rail -->
-    <aside
-        class="hidden md:flex flex-col items-center py-8 w-[80px] bg-m3-surface-container border-r border-m3-outline/5 z-20 shrink-0">
-        <div class="mb-8">
-            <button class="p-3 rounded-full hover:bg-white/5 transition-colors text-m3-on-surface">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
-        </div>
-        <nav class="flex flex-col gap-4 w-full items-center">
-            <a class="nav-item active flex flex-col items-center gap-1 group w-full px-2" href="/">
+<body class="bg-dark-900 text-gray-100 font-sans min-h-screen">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="hidden lg:flex flex-col w-64 bg-dark-800 border-r border-white/5 p-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 px-3 py-4 mb-6">
                 <div
-                    class="icon-container w-14 h-8 rounded-full flex items-center justify-center transition-colors duration-200">
-                    <span class="material-symbols-outlined text-2xl">dashboard</span>
+                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white text-xl">school</span>
                 </div>
-                <span
-                    class="text-[12px] font-medium text-m3-on-surface-variant group-hover:text-m3-on-surface transition-colors">Home</span>
-            </a>
-            <a class="nav-item flex flex-col items-center gap-1 group w-full px-2" href="#">
-                <div
-                    class="icon-container w-14 h-8 rounded-full flex items-center justify-center hover:bg-white/5 transition-colors text-m3-on-surface-variant">
-                    <span class="material-symbols-outlined text-2xl">book</span>
+                <div>
+                    <h1 class="font-bold text-lg text-white">EduPortal</h1>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-wider">Student Panel</p>
                 </div>
-                <span
-                    class="text-[12px] font-medium text-m3-on-surface-variant group-hover:text-m3-on-surface transition-colors">Courses</span>
-            </a>
-            <a class="nav-item flex flex-col items-center gap-1 group w-full px-2" href="#">
-                <div
-                    class="icon-container w-14 h-8 rounded-full flex items-center justify-center hover:bg-white/5 transition-colors text-m3-on-surface-variant">
-                    <span class="material-symbols-outlined text-2xl">bar_chart</span>
-                </div>
-                <span
-                    class="text-[12px] font-medium text-m3-on-surface-variant group-hover:text-m3-on-surface transition-colors">Grades</span>
-            </a>
-            <a class="nav-item flex flex-col items-center gap-1 group w-full px-2" href="#">
-                <div
-                    class="icon-container w-14 h-8 rounded-full flex items-center justify-center hover:bg-white/5 transition-colors text-m3-on-surface-variant">
-                    <span class="material-symbols-outlined text-2xl">calendar_month</span>
-                </div>
-                <span
-                    class="text-[12px] font-medium text-m3-on-surface-variant group-hover:text-m3-on-surface transition-colors">Schedule</span>
-            </a>
-        </nav>
-        <div class="mt-auto flex flex-col items-center gap-4">
-            <a href="/logout"
-                class="w-10 h-10 rounded-full bg-m3-primary/20 flex items-center justify-center ring-1 ring-m3-outline/20 hover:ring-m3-primary/50 transition-all cursor-pointer">
-                <span class="material-symbols-outlined text-m3-primary">logout</span>
-            </a>
-        </div>
-    </aside>
+            </div>
 
-    <!-- Mobile Bottom Navigation -->
-    <nav
-        class="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-m3-surface-container border-t border-m3-outline/10 z-50 flex justify-around items-center px-4">
-        <a class="flex flex-col items-center gap-1 group" href="/">
-            <div class="w-16 h-8 rounded-full bg-m3-secondary-container flex items-center justify-center">
-                <span class="material-symbols-outlined text-m3-on-secondary-container text-2xl"
-                    style="font-variation-settings: 'FILL' 1;">dashboard</span>
-            </div>
-            <span class="text-[12px] font-bold text-m3-on-surface">Home</span>
-        </a>
-        <a class="flex flex-col items-center gap-1 group text-m3-on-surface-variant" href="#">
-            <div class="w-16 h-8 rounded-full flex items-center justify-center">
-                <span class="material-symbols-outlined text-2xl">book</span>
-            </div>
-            <span class="text-[12px] font-medium">Courses</span>
-        </a>
-        <a class="flex flex-col items-center gap-1 group text-m3-on-surface-variant" href="#">
-            <div class="w-16 h-8 rounded-full flex items-center justify-center">
-                <span class="material-symbols-outlined text-2xl">bar_chart</span>
-            </div>
-            <span class="text-[12px] font-medium">Grades</span>
-        </a>
-        <a class="flex flex-col items-center gap-1 group text-m3-on-surface-variant" href="/logout">
-            <div class="w-16 h-8 rounded-full flex items-center justify-center">
-                <span class="material-symbols-outlined text-2xl">logout</span>
-            </div>
-            <span class="text-[12px] font-medium">Exit</span>
-        </a>
-    </nav>
-
-    <main class="flex-1 flex flex-col h-full overflow-hidden relative bg-m3-surface">
-        <div class="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 pb-24 md:pb-8 scroll-smooth">
-            <div class="max-w-[1600px] mx-auto flex flex-col gap-6">
-                <!-- Mobile Header -->
-                <div class="md:hidden flex justify-between items-center mb-4">
-                    <span class="text-xl font-normal text-m3-on-surface">Student Portal</span>
-                </div>
-
-                <!-- Hero Header -->
-                <header
-                    class="flex flex-wrap justify-between items-end gap-6 rounded-[28px] bg-gradient-to-br from-purple-900/40 to-m3-surface-container p-6 md:p-10">
-                    <div class="flex flex-col gap-4 max-w-2xl">
-                        <div>
-                            <h2 class="text-m3-on-surface-variant text-sm font-medium tracking-wider uppercase mb-2">
-                                Overview</h2>
-                            <h1
-                                class="text-4xl md:text-5xl lg:text-[57px] font-normal text-m3-on-surface leading-[1.1] tracking-[-0.5px]">
-                                Welcome back, <br /><span class="font-normal text-m3-primary">
-                                    <%= user.fullname.split(' ')[0] %></span>
-                            </h1>
-                        </div>
-                        <p class="text-lg text-m3-on-surface-variant font-normal max-w-lg leading-relaxed">
-                            You have <span class="text-m3-on-secondary bg-m3-secondary-container px-2 py-1 rounded text-sm font-bold align-middle mx-1"><%= assignments.filter(a => a.status === '
-                                        pending').length %> tasks
-                                </span> pending today.
-                                </p>
+            <!-- Profile Card -->
+            <div class="glass-card rounded-2xl p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <div
+                            class="w-12 h-12 rounded-full bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center text-lg font-bold">
+                            <%= user.fullname.charAt(0) %>
                         </div>
                         <div
-                            class="flex items-center gap-3 bg-m3-secondary-container text-m3-on-secondary-container px-5 py-3 rounded-2xl shadow-sm">
-                            <span class="material-symbols-outlined text-xl">calendar_today</span>
-                            <p class="text-base font-medium">Fall Semester • Week 8</p>
+                            class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-accent-green rounded-full border-2 border-dark-800">
                         </div>
-                </header>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-sm truncate">
+                            <%= user.fullname %>
+                        </p>
+                        <p class="text-xs text-gray-500">B.Tech CSE • Sem 4</p>
+                    </div>
+                </div>
+            </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <!-- Main Content Area -->
-                    <div class="lg:col-span-8 flex flex-col gap-6">
-                        <!-- Stats Cards -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <!-- CGPA Card -->
-                            <div
-                                class="bg-m3-surface-container-high rounded-[24px] p-6 relative overflow-hidden group hover:shadow-lg transition-shadow">
-                                <div class="flex flex-col h-full justify-between relative z-10">
-                                    <div class="flex justify-between items-start">
-                                        <p class="text-m3-on-surface-variant text-sm font-medium">Average Grade</p>
-                                        <div
-                                            class="bg-m3-primary/20 text-m3-primary text-xs px-2 py-1 rounded-md flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                                            Good
-                                        </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <% const avgGrade=marks.length> 0 ? Math.round(marks.reduce((sum, m) => sum +
-                                            m.marks, 0) / marks.length) : 0;
-                                            %>
-                                            <p class="text-[45px] leading-none font-normal text-m3-on-surface">
-                                                <%= avgGrade %>%
-                                            </p>
-                                            <p class="text-m3-on-surface-variant text-xs mt-2">Based on <%= marks.length
-                                                    %> subjects</p>
-                                    </div>
-                                </div>
-                            </div>
+            <!-- Navigation -->
+            <nav class="flex-1 space-y-1">
+                <a href="/"
+                    class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200">
+                    <span class="material-symbols-outlined nav-icon filled text-xl">dashboard</span>
+                    <span class="text-sm font-medium">Dashboard</span>
+                </a>
+                <a href="#"
+                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
+                    <span class="material-symbols-outlined nav-icon text-xl">menu_book</span>
+                    <span class="text-sm font-medium">Courses</span>
+                </a>
+                <a href="#"
+                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
+                    <span class="material-symbols-outlined nav-icon text-xl">assignment</span>
+                    <span class="text-sm font-medium">Assignments</span>
+                </a>
+                <a href="#"
+                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
+                    <span class="material-symbols-outlined nav-icon text-xl">analytics</span>
+                    <span class="text-sm font-medium">Grades</span>
+                </a>
+                <a href="#"
+                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
+                    <span class="material-symbols-outlined nav-icon text-xl">event_note</span>
+                    <span class="text-sm font-medium">Schedule</span>
+                </a>
+                <a href="#"
+                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
+                    <span class="material-symbols-outlined nav-icon text-xl">folder_open</span>
+                    <span class="text-sm font-medium">Resources</span>
+                </a>
+            </nav>
 
-                            <!-- Attendance Card -->
-                            <div
-                                class="bg-m3-surface-container-high rounded-[24px] p-6 flex flex-col items-center justify-center relative hover:shadow-lg transition-shadow">
-                                <div class="w-full flex justify-between items-center mb-2">
-                                    <p class="text-m3-on-surface-variant text-sm font-medium">Attendance</p>
-                                    <span class="material-symbols-outlined text-m3-outline text-lg">fact_check</span>
-                                </div>
-                                <div class="relative size-24 flex items-center justify-center">
-                                    <svg class="size-full transform -rotate-90">
-                                        <circle class="text-m3-surface-container" cx="50%" cy="50%" fill="transparent"
-                                            r="40" stroke="currentColor" stroke-width="8"></circle>
-                                        <% const circumference=2 * Math.PI * 40; const offset=circumference * ((100 -
-                                            attendancePercentage) / 100); %>
-                                            <circle class="text-m3-secondary" cx="50%" cy="50%" fill="transparent"
-                                                r="40" stroke="currentColor" stroke-dasharray="<%= circumference %>"
-                                                stroke-dashoffset="<%= offset %>" stroke-linecap="round"
-                                                stroke-width="8"></circle>
-                                    </svg>
-                                    <div class="absolute inset-0 flex items-center justify-center">
-                                        <span class="text-2xl font-bold text-m3-on-surface">
-                                            <%= attendancePercentage %>%
-                                        </span>
-                                    </div>
-                                </div>
-                                <p class="text-m3-on-surface-variant text-xs mt-3">
-                                    <%= presentDays %>/<%= totalDays %> days
-                                </p>
-                            </div>
+            <!-- Bottom Actions -->
+            <div class="border-t border-white/5 pt-4 space-y-1">
+                <a href="#"
+                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
+                    <span class="material-symbols-outlined nav-icon text-xl">settings</span>
+                    <span class="text-sm font-medium">Settings</span>
+                </a>
+                <a href="/logout"
+                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-200">
+                    <span class="material-symbols-outlined nav-icon text-xl">logout</span>
+                    <span class="text-sm font-medium">Logout</span>
+                </a>
+            </div>
+        </aside>
 
-                            <!-- Pending Tasks Card -->
-                            <div
-                                class="bg-m3-surface-container rounded-[24px] border border-m3-outline/20 p-5 flex flex-col hover:bg-m3-surface-container-high transition-colors">
-                                <div class="flex justify-between items-center mb-4">
-                                    <p class="text-m3-on-surface font-medium">Pending</p>
-                                    <div
-                                        class="size-6 bg-m3-error text-m3-surface rounded-full flex items-center justify-center text-xs font-bold">
-                                        <%= assignments.filter(a=> a.status === 'pending').length %>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col gap-3 overflow-y-auto flex-1">
-                                    <% assignments.filter(a=> a.status === 'pending').slice(0, 2).forEach(assignment =>
-                                        { %>
-                                        <div class="flex items-start gap-3">
-                                            <div class="mt-1.5 w-2 h-2 rounded-full bg-m3-error"></div>
-                                            <div class="flex flex-col">
-                                                <span class="text-sm text-m3-on-surface">
-                                                    <%= assignment.title.substring(0, 30) %>...
-                                                </span>
-                                                <span class="text-[11px] text-m3-on-surface-variant">Due <%= new
-                                                        Date(assignment.due_date).toLocaleDateString() %></span>
-                                            </div>
-                                        </div>
-                                        <% }); %>
-                                </div>
-                            </div>
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- Top Bar -->
+            <header class="sticky top-0 z-40 glass border-b border-white/5 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <button class="lg:hidden p-2 rounded-lg hover:bg-dark-600 transition-colors">
+                            <span class="material-symbols-outlined">menu</span>
+                        </button>
+                        <div>
+                            <h2 class="text-xl font-semibold">Welcome back, <%= user.fullname.split(' ')[0] %>! 👋</h2>
+                            <p class="text-sm text-gray-500">Here' s your academic overview</p>
                         </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button class="relative p-2.5 rounded-xl bg-dark-700 hover:bg-dark-600 transition-colors">
+                            <span class="material-symbols-outlined text-gray-400">notifications</span>
+                            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-accent-blue rounded-full"></span>
+                        </button>
+                        <div class="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-dark-700">
+                            <span class="material-symbols-outlined text-accent-green text-sm">calendar_today</span>
+                            <span class="text-sm text-gray-300">
+                                <%= new Date().toLocaleDateString('en-US', { weekday: 'short' , month: 'short' ,
+                                    day: 'numeric' }) %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-                        <!-- Performance Chart -->
-                        <div class="bg-m3-surface-container rounded-[24px] p-6 lg:p-8 flex flex-col gap-6">
-                            <div class="flex justify-between items-center">
-                                <h3 class="text-xl font-normal text-m3-on-surface">Academic Performance</h3>
+            <!-- Dashboard Content -->
+            <div class="p-6 space-y-6">
+                <!-- Stats Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- CGPA Card -->
+                    <div class="stat-card glass-card rounded-2xl p-5 glow-blue transition-all duration-300">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="p-2.5 rounded-xl bg-accent-blue/20">
+                                <span class="material-symbols-outlined text-accent-blue">trending_up</span>
                             </div>
-                            <div class="relative h-56 w-full flex items-end justify-between px-2 gap-2 sm:gap-6 pt-8">
-                                <div
-                                    class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10">
-                                    <div class="w-full h-px bg-m3-on-surface"></div>
-                                    <div class="w-full h-px bg-m3-on-surface"></div>
-                                    <div class="w-full h-px bg-m3-on-surface"></div>
-                                    <div class="w-full h-px bg-m3-on-surface"></div>
-                                    <div class="w-full h-px bg-m3-on-surface"></div>
-                                </div>
-                                <% marks.forEach((mark, idx)=> {
-                                    const height = mark.marks + '%';
-                                    const isHighest = mark.marks === Math.max(...marks.map(m => m.marks));
-                                    %>
-                                    <div class="flex-1 flex flex-col justify-end group cursor-pointer relative z-10">
-                                        <div class="w-full <%= isHighest ? 'bg-m3-primary' : 'bg-m3-surface-container-high' %> rounded-t-lg transition-all duration-300 group-hover:bg-m3-primary/50"
-                                            style="height: <%= height %>">
-                                            <div
-                                                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-m3-surface-container-high px-2 py-1 rounded text-xs text-m3-on-surface opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <%= mark.marks %>
-                                            </div>
-                                        </div>
-                                        <p
-                                            class="text-xs text-center <%= isHighest ? 'text-m3-primary font-bold' : 'text-m3-on-surface-variant' %> mt-3 font-medium">
-                                            <%= mark.subject.substring(0, 6) %>
-                                        </p>
-                                    </div>
-                                    <% }); %>
+                            <span
+                                class="text-xs text-accent-green font-medium px-2 py-1 rounded-full bg-accent-green/10">+0.2</span>
+                        </div>
+                        <% const avgGrade=marks.length> 0 ? (marks.reduce((sum, m) => sum + m.marks, 0) /
+                            marks.length).toFixed(1) : 0; %>
+                            <p class="text-3xl font-bold text-white mb-1">
+                                <%= avgGrade %>%
+                            </p>
+                            <p class="text-sm text-gray-500">Average Grade</p>
+                            <div class="mt-3 h-1.5 bg-dark-600 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-accent-blue to-accent-purple rounded-full"
+                                    style="width: <%= avgGrade %>%"></div>
                             </div>
+                    </div>
+
+                    <!-- Attendance Card -->
+                    <div class="stat-card glass-card rounded-2xl p-5 glow-green transition-all duration-300">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="p-2.5 rounded-xl bg-accent-green/20">
+                                <span class="material-symbols-outlined text-accent-green">fact_check</span>
+                            </div>
+                            <span class="text-xs text-gray-400 font-medium">
+                                <%= presentDays %>/<%= totalDays %> days
+                            </span>
+                        </div>
+                        <p class="text-3xl font-bold text-white mb-1">
+                            <%= attendancePercentage %>%
+                        </p>
+                        <p class="text-sm text-gray-500">Attendance</p>
+                        <div class="mt-3 h-1.5 bg-dark-600 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-accent-green to-accent-cyan rounded-full"
+                                style="width: <%= attendancePercentage %>%"></div>
                         </div>
                     </div>
 
-                    <!-- Sidebar -->
-                    <div class="lg:col-span-4 flex flex-col gap-6">
-                        <!-- Today's Schedule -->
-                        <div class="bg-m3-surface-container rounded-[24px] p-6 flex flex-col h-full min-h-[400px]">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="text-xl font-normal text-m3-on-surface">Today's Schedule</h3>
+                    <!-- Pending Tasks -->
+                    <div class="stat-card glass-card rounded-2xl p-5 glow-purple transition-all duration-300">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="p-2.5 rounded-xl bg-accent-purple/20">
+                                <span class="material-symbols-outlined text-accent-purple">pending_actions</span>
                             </div>
-                            <div class="flex flex-col relative h-full gap-6 pl-2">
-                                <div class="absolute left-[70px] top-2 bottom-4 w-0.5 bg-m3-outline/20"></div>
-                                <div class="flex gap-4 relative">
-                                    <div class="w-14 text-right pt-2">
-                                        <p class="text-m3-on-surface font-bold text-sm">09:00</p>
-                                        <p class="text-m3-on-surface-variant text-[10px]">AM</p>
-                                    </div>
-                                    <div class="relative z-10 pt-2.5">
-                                        <div
-                                            class="size-3 bg-m3-primary rounded-full ring-4 ring-m3-surface-container shadow-sm">
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="flex-1 bg-m3-surface-container-high p-4 rounded-xl border-l-4 border-m3-primary shadow-sm">
-                                        <h4 class="text-m3-primary font-bold text-sm">Mathematics</h4>
-                                        <p class="text-m3-on-surface-variant text-xs mt-1 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-[14px]">location_on</span>
-                                            Room 302
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="flex gap-4 relative opacity-50">
-                                    <div class="w-14"></div>
-                                    <div class="relative z-10 pt-1">
-                                        <div class="size-2 bg-m3-outline rounded-full ml-0.5"></div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-m3-on-surface-variant text-xs italic">End of classes</p>
-                                    </div>
-                                </div>
+                            <span
+                                class="text-xs text-accent-orange font-medium px-2 py-1 rounded-full bg-accent-orange/10">Due
+                                Soon</span>
+                        </div>
+                        <p class="text-3xl font-bold text-white mb-1">
+                            <%= assignments.filter(a=> a.status === 'pending').length %>
+                        </p>
+                        <p class="text-sm text-gray-500">Pending Tasks</p>
+                        <div class="mt-3 flex gap-1">
+                            <% for(let i=0; i < Math.min(5, assignments.filter(a=> a.status === 'pending').length); i++)
+                                { %>
+                                <div class="flex-1 h-1.5 bg-accent-orange/50 rounded-full"></div>
+                                <% } %>
+                                    <% for(let i=0; i < 5 - Math.min(5, assignments.filter(a=> a.status ===
+                                        'pending').length); i++) { %>
+                                        <div class="flex-1 h-1.5 bg-dark-600 rounded-full"></div>
+                                        <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Credits -->
+                    <div class="stat-card glass-card rounded-2xl p-5 transition-all duration-300">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="p-2.5 rounded-xl bg-accent-pink/20">
+                                <span class="material-symbols-outlined text-accent-pink">school</span>
+                            </div>
+                            <span class="text-xs text-gray-400 font-medium">Semester 4</span>
+                        </div>
+                        <p class="text-3xl font-bold text-white mb-1">18/24</p>
+                        <p class="text-sm text-gray-500">Credits Earned</p>
+                        <div class="mt-3 h-1.5 bg-dark-600 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-accent-pink to-accent-orange rounded-full"
+                                style="width: 75%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Performance Chart -->
+                    <div class="lg:col-span-2 glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold">Academic Performance</h3>
+                                <p class="text-sm text-gray-500">Subject-wise marks analysis</p>
+                            </div>
+                            <select
+                                class="bg-dark-600 border-0 rounded-lg px-3 py-2 text-sm text-gray-300 focus:ring-2 focus:ring-accent-blue">
+                                <option>This Semester</option>
+                                <option>Last Semester</option>
+                                <option>All Time</option>
+                            </select>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Attendance Ring -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold">Attendance</h3>
+                                <p class="text-sm text-gray-500">This semester</p>
                             </div>
                         </div>
-
-                        <!-- Mini Calendar -->
-                        <div class="bg-m3-surface-container rounded-[24px] p-6 flex flex-col gap-4">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <p class="text-xs font-bold text-m3-on-surface-variant uppercase tracking-wider">
-                                        <%= new Date().toLocaleDateString('en-US', { month: 'long' }) %>
-                                    </p>
-                                    <p class="text-3xl font-normal text-m3-on-surface">
-                                        <%= new Date().getDate() %>
-                                    </p>
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-40 h-40">
+                                <svg class="w-full h-full progress-ring" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="42" fill="none" stroke="#1a1a24" stroke-width="10" />
+                                    <circle cx="50" cy="50" r="42" fill="none" stroke="url(#attendanceGradient)"
+                                        stroke-width="10" stroke-linecap="round"
+                                        stroke-dasharray="<%= 2 * Math.PI * 42 %>"
+                                        stroke-dashoffset="<%= 2 * Math.PI * 42 * (1 - attendancePercentage / 100) %>" />
+                                    <defs>
+                                        <linearGradient id="attendanceGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#34d399" />
+                                            <stop offset="100%" stop-color="#22d3ee" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-3xl font-bold">
+                                        <%= attendancePercentage %>%
+                                    </span>
+                                    <span class="text-xs text-gray-500">Present</span>
                                 </div>
-                                <button class="p-2 rounded-full hover:bg-m3-surface-container-high transition-colors">
-                                    <span class="material-symbols-outlined text-m3-on-surface">calendar_month</span>
-                                </button>
                             </div>
-                            <div class="grid grid-cols-7 gap-1 text-center text-xs text-m3-on-surface-variant mt-2">
-                                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                            <div class="grid grid-cols-2 gap-4 mt-6 w-full">
+                                <div class="text-center p-3 bg-dark-600 rounded-xl">
+                                    <p class="text-xl font-bold text-accent-green">
+                                        <%= presentDays %>
+                                    </p>
+                                    <p class="text-xs text-gray-500">Present</p>
+                                </div>
+                                <div class="text-center p-3 bg-dark-600 rounded-xl">
+                                    <p class="text-xl font-bold text-red-400">
+                                        <%= totalDays - presentDays %>
+                                    </p>
+                                    <p class="text-xs text-gray-500">Absent</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Bottom Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Today's Schedule -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold">Today's Schedule</h3>
+                                <p class="text-sm text-gray-500">
+                                    <%= new Date().toLocaleDateString('en-US', { weekday: 'long' }) %>
+                                </p>
+                            </div>
+                            <span class="material-symbols-outlined text-gray-500">calendar_month</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div
+                                class="flex items-center gap-4 p-3 bg-dark-600 rounded-xl border-l-4 border-accent-blue">
+                                <div class="text-center min-w-[50px]">
+                                    <p class="text-sm font-bold">9:00</p>
+                                    <p class="text-[10px] text-gray-500">AM</p>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm">Mathematics</p>
+                                    <p class="text-xs text-gray-500 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">location_on</span>
+                                        Room 302
+                                    </p>
+                                </div>
+                                <span
+                                    class="px-2 py-1 text-[10px] bg-accent-blue/20 text-accent-blue rounded-full">Lecture</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-4 p-3 bg-dark-600 rounded-xl border-l-4 border-accent-green">
+                                <div class="text-center min-w-[50px]">
+                                    <p class="text-sm font-bold">11:00</p>
+                                    <p class="text-[10px] text-gray-500">AM</p>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm">Physics Lab</p>
+                                    <p class="text-xs text-gray-500 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">location_on</span>
+                                        Lab 101
+                                    </p>
+                                </div>
+                                <span
+                                    class="px-2 py-1 text-[10px] bg-accent-green/20 text-accent-green rounded-full">Lab</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-4 p-3 bg-dark-600 rounded-xl border-l-4 border-accent-purple">
+                                <div class="text-center min-w-[50px]">
+                                    <p class="text-sm font-bold">2:00</p>
+                                    <p class="text-[10px] text-gray-500">PM</p>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm">Data Structures</p>
+                                    <p class="text-xs text-gray-500 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-xs">location_on</span>
+                                        Room 405
+                                    </p>
+                                </div>
+                                <span
+                                    class="px-2 py-1 text-[10px] bg-accent-purple/20 text-accent-purple rounded-full">Lecture</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assignments -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold">Assignments</h3>
+                                <p class="text-sm text-gray-500">Upcoming deadlines</p>
+                            </div>
+                            <a href="#" class="text-accent-blue text-sm hover:underline">View All</a>
+                        </div>
+                        <div class="space-y-3">
+                            <% assignments.forEach((assignment, i)=> { %>
+                                <div
+                                    class="p-3 bg-dark-600 rounded-xl hover:bg-dark-500 transition-colors cursor-pointer">
+                                    <div class="flex items-start justify-between mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div
+                                                class="w-8 h-8 rounded-lg <%= assignment.status === 'pending' ? 'bg-accent-orange/20' : 'bg-accent-green/20' %> flex items-center justify-center">
+                                                <span
+                                                    class="material-symbols-outlined text-sm <%= assignment.status === 'pending' ? 'text-accent-orange' : 'text-accent-green' %>">
+                                                    <%= assignment.status==='pending' ? 'schedule' : 'check_circle' %>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-medium">
+                                                    <%= assignment.title.substring(0, 25) %>...
+                                                </p>
+                                                <p class="text-xs text-gray-500">Due: <%= new
+                                                        Date(assignment.due_date).toLocaleDateString('en-US', {
+                                                        month: 'short' , day: 'numeric' }) %>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span
+                                            class="text-xs px-2 py-1 rounded-full <%= assignment.status === 'pending' ? 'bg-accent-orange/10 text-accent-orange' : 'bg-accent-green/10 text-accent-green' %>">
+                                            <%= assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)
+                                                %>
+                                        </span>
+                                        <% if(assignment.status==='pending' ) { %>
+                                            <button class="text-xs text-accent-blue hover:underline">Submit</button>
+                                            <% } %>
+                                    </div>
+                                </div>
+                                <% }); %>
+                        </div>
+                    </div>
+
+                    <!-- Recent Grades -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold">Recent Grades</h3>
+                                <p class="text-sm text-gray-500">Latest results</p>
+                            </div>
+                            <a href="#" class="text-accent-blue text-sm hover:underline">View All</a>
+                        </div>
+                        <div class="space-y-3">
+                            <% marks.forEach((mark, i)=> {
+                                const gradeColor = mark.marks >= 90 ? 'accent-green' : mark.marks >= 75 ? 'accent-blue'
+                                : mark.marks >= 60 ? 'accent-orange' : 'red-400';
+                                %>
+                                <div class="flex items-center justify-between p-3 bg-dark-600 rounded-xl">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 rounded-xl bg-gradient-to-br from-<%= gradeColor %>/30 to-<%= gradeColor %>/10 flex items-center justify-center">
+                                            <span class="text-sm font-bold text-<%= gradeColor %>">
+                                                <%= mark.marks>= 90 ? 'A' : mark.marks >= 75 ? 'B' : mark.marks >= 60 ?
+                                                    'C' : 'D' %>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium">
+                                                <%= mark.subject %>
+                                            </p>
+                                            <p class="text-xs text-gray-500">Mid-term Exam</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-lg font-bold text-<%= gradeColor %>">
+                                            <%= mark.marks %>
+                                        </p>
+                                        <p class="text-xs text-gray-500">/100</p>
+                                    </div>
+                                </div>
+                                <% }); %>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </main>
+    </div>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 glass border-t border-white/5 px-4 py-2 z-50">
+        <div class="flex items-center justify-around">
+            <a href="/" class="flex flex-col items-center gap-1 text-accent-blue">
+                <span class="material-symbols-outlined filled text-xl">dashboard</span>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 text-gray-500">
+                <span class="material-symbols-outlined text-xl">menu_book</span>
+                <span class="text-[10px] font-medium">Courses</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 text-gray-500">
+                <span class="material-symbols-outlined text-xl">assignment</span>
+                <span class="text-[10px] font-medium">Tasks</span>
+            </a>
+            <a href="#" class="flex flex-col items-center gap-1 text-gray-500">
+                <span class="material-symbols-outlined text-xl">analytics</span>
+                <span class="text-[10px] font-medium">Grades</span>
+            </a>
+            <a href="/logout" class="flex flex-col items-center gap-1 text-gray-500">
+                <span class="material-symbols-outlined text-xl">logout</span>
+                <span class="text-[10px] font-medium">Exit</span>
+            </a>
         </div>
-    </main>
+    </nav>
+
+    <script>
+        // Performance Chart
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const marks = <% - JSON.stringify(marks) %>;
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: marks.map(m => m.subject),
+                datasets: [{
+                    label: 'Marks',
+                    data: marks.map(m => m.marks),
+                    backgroundColor: marks.map((m, i) => {
+                        const colors = ['rgba(96, 165, 250, 0.8)', 'rgba(52, 211, 153, 0.8)', 'rgba(167, 139, 250, 0.8)', 'rgba(251, 146, 60, 0.8)'];
+                        return colors[i % colors.length];
+                    }),
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#6b7280', font: { size: 11 } }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#6b7280', font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
