@@ -5,502 +5,202 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Faculty Dashboard - EduPortal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
         rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        light: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                        },
-                        primary: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                        },
-                        success: {
-                            50: '#ecfdf5',
-                            500: '#10b981',
-                            600: '#059669',
-                        },
-                        warning: {
-                            50: '#fffbeb',
-                            500: '#f59e0b',
-                        },
-                        danger: {
-                            50: '#fef2f2',
-                            500: '#ef4444',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
     <style>
-        .toggle-switch {
-            transition: background-color 0.3s ease;
-        }
-
-        .toggle-switch:checked {
-            background-color: #10b981;
-        }
-
-        .toggle-switch:checked::after {
-            transform: translateX(20px);
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-shadow {
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-hover:hover {
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-            transform: translateY(-2px);
+        body {
+            font-family: 'Inter', sans-serif;
         }
 
         .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        .filled {
-            font-variation-settings: 'FILL' 1, 'wght' 500;
-        }
-
-        .gradient-primary {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-        }
-
-        .gradient-success {
-            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+            font-size: 24px;
+            vertical-align: middle;
         }
     </style>
 </head>
 
-<body class="bg-light-50 text-gray-800 font-sans min-h-screen">
-    <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <aside class="hidden lg:flex flex-col w-64 bg-white border-r border-light-200 p-4">
-            <!-- Logo -->
-            <div class="flex items-center gap-3 px-3 py-4 mb-6">
-                <div class="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-white text-xl">school</span>
-                </div>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-emerald-600 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-3xl">badge</span>
                 <div>
-                    <h1 class="font-bold text-lg text-gray-900">EduPortal</h1>
-                    <p class="text-[10px] text-gray-400 uppercase tracking-wider">Faculty Panel</p>
+                    <h1 class="text-xl font-bold">Faculty Dashboard</h1>
+                    <p class="text-emerald-200 text-sm">Welcome, <%= user.fullname %>
+                    </p>
                 </div>
             </div>
-
-            <!-- Profile -->
-            <div class="bg-light-100 rounded-2xl p-4 mb-6">
-                <div class="flex items-center gap-3">
-                    <div
-                        class="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white text-lg font-bold">
-                        <%= user.fullname.charAt(0) %>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-semibold text-sm truncate text-gray-900">
-                            <%= user.fullname %>
-                        </p>
-                        <p class="text-xs text-gray-500">Computer Science Dept.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation -->
-            <nav class="flex-1 space-y-1">
-                <a href="/"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary-50 text-primary-600 font-medium transition-all">
-                    <span class="material-symbols-outlined filled text-xl">dashboard</span>
-                    <span class="text-sm">Dashboard</span>
-                </a>
-                <a href="#attendance"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-light-100 transition-all">
-                    <span class="material-symbols-outlined text-xl">fact_check</span>
-                    <span class="text-sm">Attendance</span>
-                </a>
-                <a href="#grades"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-light-100 transition-all">
-                    <span class="material-symbols-outlined text-xl">grading</span>
-                    <span class="text-sm">Grades</span>
-                </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-light-100 transition-all">
-                    <span class="material-symbols-outlined text-xl">groups</span>
-                    <span class="text-sm">Students</span>
-                </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-light-100 transition-all">
-                    <span class="material-symbols-outlined text-xl">assignment</span>
-                    <span class="text-sm">Assignments</span>
-                </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-light-100 transition-all">
-                    <span class="material-symbols-outlined text-xl">event</span>
-                    <span class="text-sm">Schedule</span>
-                </a>
-            </nav>
-
-            <!-- Logout -->
-            <div class="border-t border-light-200 pt-4">
-                <a href="/logout"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-danger-500 hover:bg-danger-50 transition-all">
-                    <span class="material-symbols-outlined text-xl">logout</span>
-                    <span class="text-sm font-medium">Logout</span>
-                </a>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto">
-            <!-- Header -->
-            <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-light-200 px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <button class="lg:hidden p-2 rounded-lg hover:bg-light-100 transition-colors">
-                            <span class="material-symbols-outlined">menu</span>
-                        </button>
-                        <div>
-                            <h2 class="text-xl font-semibold text-gray-900">Faculty Dashboard</h2>
-                            <p class="text-sm text-gray-500">Manage your classes and students</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button class="relative p-2.5 rounded-xl bg-light-100 hover:bg-light-200 transition-colors">
-                            <span class="material-symbols-outlined text-gray-600">notifications</span>
-                            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger-500 rounded-full"></span>
-                        </button>
-                        <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-light-100">
-                            <span class="material-symbols-outlined text-primary-500 text-sm">calendar_today</span>
-                            <span class="text-sm text-gray-600">
-                                <%= today %>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Content -->
-            <div class="p-6 space-y-6">
-                <!-- Stats -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-white rounded-2xl p-5 card-shadow card-hover transition-all duration-300">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 mb-1">Total Students</p>
-                                <p class="text-3xl font-bold text-gray-900">
-                                    <%= students.length %>
-                                </p>
-                            </div>
-                            <div class="p-3 rounded-xl bg-primary-50">
-                                <span class="material-symbols-outlined text-primary-500">groups</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 flex items-center gap-2">
-                            <span class="text-xs text-success-500 font-medium">↑ 12%</span>
-                            <span class="text-xs text-gray-400">from last semester</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-5 card-shadow card-hover transition-all duration-300">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 mb-1">Marked Today</p>
-                                <p class="text-3xl font-bold text-gray-900">
-                                    <%= Object.keys(attendanceMap).length %>
-                                </p>
-                            </div>
-                            <div class="p-3 rounded-xl bg-success-50">
-                                <span class="material-symbols-outlined text-success-500">check_circle</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 flex items-center gap-2">
-                            <span class="text-xs text-gray-500">
-                                <%= students.length - Object.keys(attendanceMap).length %> remaining
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-5 card-shadow card-hover transition-all duration-300">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 mb-1">Classes Today</p>
-                                <p class="text-3xl font-bold text-gray-900">4</p>
-                            </div>
-                            <div class="p-3 rounded-xl bg-warning-50">
-                                <span class="material-symbols-outlined text-warning-500">event</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 flex items-center gap-2">
-                            <span class="text-xs text-primary-500 font-medium">2 completed</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-5 card-shadow card-hover transition-all duration-300">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="text-sm text-gray-500 mb-1">Pending Grades</p>
-                                <p class="text-3xl font-bold text-gray-900">8</p>
-                            </div>
-                            <div class="p-3 rounded-xl bg-danger-50">
-                                <span class="material-symbols-outlined text-danger-500">pending</span>
-                            </div>
-                        </div>
-                        <div class="mt-3 flex items-center gap-2">
-                            <span class="text-xs text-danger-500 font-medium">Due in 3 days</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Attendance Section -->
-                <div id="attendance" class="bg-white rounded-2xl card-shadow overflow-hidden">
-                    <div class="px-6 py-4 border-b border-light-200 flex flex-wrap items-center justify-between gap-4">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900">Mark Attendance</h3>
-                            <p class="text-sm text-gray-500">
-                                <%= today %> • Computer Science
-                            </p>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <button onclick="markAll(true)"
-                                class="px-4 py-2 text-sm font-medium text-success-600 bg-success-50 rounded-lg hover:bg-success-100 transition-colors">
-                                <span class="material-symbols-outlined text-sm align-middle mr-1">check_circle</span>
-                                Mark All Present
-                            </button>
-                            <button onclick="markAll(false)"
-                                class="px-4 py-2 text-sm font-medium text-danger-500 bg-danger-50 rounded-lg hover:bg-danger-100 transition-colors">
-                                <span class="material-symbols-outlined text-sm align-middle mr-1">cancel</span>
-                                Mark All Absent
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="bg-light-50">
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Student</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Email</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Status</th>
-                                    <th
-                                        class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                        Present</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-light-200">
-                                <% students.forEach((student, index)=> {
-                                    const isPresent = attendanceMap[student.id] === 'present';
-                                    %>
-                                    <tr class="hover:bg-light-50 transition-colors">
-                                        <td class="px-6 py-4">
-                                            <div class="flex items-center gap-3">
-                                                <div
-                                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-purple-500 flex items-center justify-center text-white font-semibold text-sm">
-                                                    <%= student.fullname.charAt(0) %>
-                                                </div>
-                                                <div>
-                                                    <p class="font-medium text-gray-900">
-                                                        <%= student.fullname %>
-                                                    </p>
-                                                    <p class="text-xs text-gray-500">Roll No: STU00<%= student.id %>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-gray-600">
-                                            <%= student.email %>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <span id="status-<%= student.id %>"
-                                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium <%= isPresent ? 'bg-success-50 text-success-600' : attendanceMap[student.id] ? 'bg-danger-50 text-danger-500' : 'bg-gray-100 text-gray-500' %>">
-                                                <%= isPresent ? 'Present' : attendanceMap[student.id] ? 'Absent'
-                                                    : 'Not Marked' %>
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 text-center">
-                                            <label class="relative inline-block w-12 h-6 cursor-pointer">
-                                                <input type="checkbox" id="attendance-<%= student.id %>"
-                                                    class="sr-only peer" <%=isPresent ? 'checked' : '' %>
-                                                onchange="markAttendance(<%= student.id %>, this.checked)"/>
-                                                    <div
-                                                        class="w-12 h-6 bg-gray-200 rounded-full peer peer-checked:bg-success-500 transition-colors">
-                                                    </div>
-                                                    <div
-                                                        class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow peer-checked:translate-x-6 transition-transform">
-                                                    </div>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                    <% }); %>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Grade Submission -->
-                <div id="grades" class="bg-white rounded-2xl card-shadow overflow-hidden">
-                    <div class="px-6 py-4 border-b border-light-200">
-                        <h3 class="text-lg font-semibold text-gray-900">Submit Grades</h3>
-                        <p class="text-sm text-gray-500">Enter student marks for evaluation</p>
-                    </div>
-                    <form id="gradeForm" class="p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Student</label>
-                                <select name="student_id" required
-                                    class="w-full px-4 py-3 rounded-xl border border-light-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all bg-white">
-                                    <option value="">Select Student...</option>
-                                    <% students.forEach(student=> { %>
-                                        <option value="<%= student.id %>">
-                                            <%= student.fullname %>
-                                        </option>
-                                        <% }); %>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
-                                <select name="subject" required
-                                    class="w-full px-4 py-3 rounded-xl border border-light-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all bg-white">
-                                    <option value="">Select Subject...</option>
-                                    <option value="Mathematics">Mathematics</option>
-                                    <option value="Physics">Physics</option>
-                                    <option value="Chemistry">Chemistry</option>
-                                    <option value="English">English</option>
-                                    <option value="Data Structures">Data Structures</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Marks (0-100)</label>
-                                <input type="number" name="marks" min="0" max="100" required placeholder="Enter marks"
-                                    class="w-full px-4 py-3 rounded-xl border border-light-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all" />
-                            </div>
-                            <div class="flex items-end">
-                                <button type="submit"
-                                    class="w-full px-6 py-3 gradient-primary text-white font-medium rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-                                    <span class="material-symbols-outlined text-xl">send</span>
-                                    Submit Grade
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Class Performance Chart -->
-                <div class="bg-white rounded-2xl card-shadow p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900">Class Performance</h3>
-                            <p class="text-sm text-gray-500">Grade distribution overview</p>
-                        </div>
-                        <select class="px-4 py-2 rounded-lg border border-light-300 text-sm text-gray-600 bg-white">
-                            <option>All Subjects</option>
-                            <option>Mathematics</option>
-                            <option>Physics</option>
-                            <option>Chemistry</option>
-                        </select>
-                    </div>
-                    <div class="h-64">
-                        <canvas id="performanceChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Mobile Bottom Nav -->
-    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-light-200 px-4 py-2 z-50">
-        <div class="flex items-center justify-around">
-            <a href="/" class="flex flex-col items-center gap-1 text-primary-500">
-                <span class="material-symbols-outlined filled text-xl">dashboard</span>
-                <span class="text-[10px] font-medium">Home</span>
-            </a>
-            <a href="#attendance" class="flex flex-col items-center gap-1 text-gray-400">
-                <span class="material-symbols-outlined text-xl">fact_check</span>
-                <span class="text-[10px] font-medium">Attendance</span>
-            </a>
-            <a href="#grades" class="flex flex-col items-center gap-1 text-gray-400">
-                <span class="material-symbols-outlined text-xl">grading</span>
-                <span class="text-[10px] font-medium">Grades</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-1 text-gray-400">
-                <span class="material-symbols-outlined text-xl">groups</span>
-                <span class="text-[10px] font-medium">Students</span>
-            </a>
-            <a href="/logout" class="flex flex-col items-center gap-1 text-gray-400">
-                <span class="material-symbols-outlined text-xl">logout</span>
-                <span class="text-[10px] font-medium">Exit</span>
+            <a href="/logout" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg flex items-center gap-2">
+                <span class="material-symbols-outlined">logout</span>
+                Logout
             </a>
         </div>
-    </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-emerald-500">
+                <p class="text-gray-500 text-sm">Total Students</p>
+                <p class="text-3xl font-bold text-gray-900">
+                    <%= students.length %>
+                </p>
+            </div>
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-blue-500">
+                <p class="text-gray-500 text-sm">Marked Today</p>
+                <p class="text-3xl font-bold text-gray-900">
+                    <%= Object.keys(attendanceMap).length %>
+                </p>
+            </div>
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-purple-500">
+                <p class="text-gray-500 text-sm">Today's Date</p>
+                <p class="text-xl font-bold text-gray-900">
+                    <%= new Date().toLocaleDateString('en-US', {weekday: 'long' , year: 'numeric' , month: 'long' ,
+                        day: 'numeric' }) %>
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Attendance Section -->
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-4">
+                    <h2 class="text-lg font-semibold flex items-center gap-2">
+                        <span class="material-symbols-outlined">event_available</span>
+                        Mark Attendance
+                    </h2>
+                    <p class="text-emerald-100 text-sm">Mark student attendance for today</p>
+                </div>
+                <div class="p-4 max-h-96 overflow-y-auto">
+                    <% if(students.length> 0) { %>
+                        <% students.forEach(function(student) { const isPresent=attendanceMap[student.id]==='present' ;
+                            const isAbsent=attendanceMap[student.id]==='absent' ; %>
+                            <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-semibold">
+                                        <%= student.fullname.charAt(0) %>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">
+                                            <%= student.fullname %>
+                                        </p>
+                                        <p class="text-xs text-gray-500">ID: #<%= student.id %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <form action="/api/mark-attendance" method="POST" class="inline">
+                                        <input type="hidden" name="student_id" value="<%= student.id %>" />
+                                        <input type="hidden" name="status" value="present" />
+                                        <button type="submit"
+                                            class="<%= isPresent ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-green-100' %> px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+                                            Present
+                                        </button>
+                                    </form>
+                                    <form action="/api/mark-attendance" method="POST" class="inline">
+                                        <input type="hidden" name="student_id" value="<%= student.id %>" />
+                                        <input type="hidden" name="status" value="absent" />
+                                        <button type="submit"
+                                            class="<%= isAbsent ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-red-100' %> px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+                                            Absent
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <% }); %>
+                                <% } else { %>
+                                    <div class="text-center py-8 text-gray-500">
+                                        <span class="material-symbols-outlined text-4xl mb-2 block">group_off</span>
+                                        <p>No students found</p>
+                                    </div>
+                                    <% } %>
+                </div>
+            </div>
+
+            <!-- Submit Grades Section -->
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-4">
+                    <h2 class="text-lg font-semibold flex items-center gap-2">
+                        <span class="material-symbols-outlined">grade</span>
+                        Submit Grades
+                    </h2>
+                    <p class="text-blue-100 text-sm">Enter marks for students</p>
+                </div>
+                <form action="/api/submit-marks" method="POST" class="p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Select Student *</label>
+                            <select name="student_id" required
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                                <option value="">Choose a student...</option>
+                                <% students.forEach(function(student) { %>
+                                    <option value="<%= student.id %>">
+                                        <%= student.fullname %> (#<%= student.id %>)
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Subject *</label>
+                            <select name="subject" required
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                                <option value="">Select subject...</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="English">English</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Biology">Biology</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Marks (0-100) *</label>
+                            <input type="number" name="marks" required min="0" max="100" placeholder="Enter marks"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                            <span class="material-symbols-outlined">send</span>
+                            Submit Grade
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
 
     <script>
-        // Mark Attendance
-        async function markAttendance(studentId, isPresent) {
-            const status = isPresent ? 'present' : 'absent';
-            try {
-                const response = await fetch('/api/mark-attendance', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ student_id: studentId, status })
-                });
-                const data = await response.json();
-                if (data.success) {
-                    const statusEl = document.getElementById(`status-${studentId}`);
-                    statusEl.textContent = isPresent ? 'Present' : 'Absent';
-                    statusEl.className = `inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${isPresent ? 'bg-success-50 text-success-600' : 'bg-danger-50 text-danger-500'}`;
+        // Handle form submissions via API
+        document.querySelectorAll('form[action="/api/mark-attendance"]').forEach(form => {
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                try {
+                    const response = await fetch('/api/mark-attendance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            student_id: formData.get('student_id'),
+                            status: formData.get('status')
+                        })
+                    });
+                    if (response.ok) {
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
                 }
-            } catch (err) {
-                console.error('Error marking attendance:', err);
-            }
-        }
-
-        // Mark All
-        function markAll(present) {
-            document.querySelectorAll('[id^="attendance-"]').forEach(checkbox => {
-                checkbox.checked = present;
-                const studentId = checkbox.id.split('-')[1];
-                markAttendance(parseInt(studentId), present);
             });
-        }
+        });
 
-        // Grade Form
-        document.getElementById('gradeForm').addEventListener('submit', async (e) => {
+        document.querySelector('form[action="/api/submit-marks"]').addEventListener('submit', async function (e) {
             e.preventDefault();
-            const formData = new FormData(e.target);
+            const formData = new FormData(this);
             try {
                 const response = await fetch('/api/submit-marks', {
                     method: 'POST',
@@ -511,39 +211,12 @@
                         marks: formData.get('marks')
                     })
                 });
-                const data = await response.json();
-                if (data.success) {
+                if (response.ok) {
                     alert('Grade submitted successfully!');
-                    e.target.reset();
+                    this.reset();
                 }
-            } catch (err) {
-                console.error('Error submitting grade:', err);
-            }
-        });
-
-        // Performance Chart
-        const ctx = document.getElementById('performanceChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['A (90-100)', 'B (75-89)', 'C (60-74)', 'D (Below 60)'],
-                datasets: [{
-                    data: [4, 8, 6, 2],
-                    backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
-                    borderWidth: 0,
-                    spacing: 2,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '60%',
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: { usePointStyle: true, padding: 20, font: { size: 12 } }
-                    }
-                }
+            } catch (error) {
+                console.error('Error:', error);
             }
         });
     </script>

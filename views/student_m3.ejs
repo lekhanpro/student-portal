@@ -5,632 +5,217 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Student Dashboard - EduPortal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
         rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            900: '#0a0a0f',
-                            800: '#12121a',
-                            700: '#1a1a24',
-                            600: '#22222e',
-                            500: '#2a2a38',
-                        },
-                        accent: {
-                            blue: '#60a5fa',
-                            green: '#34d399',
-                            purple: '#a78bfa',
-                            orange: '#fb923c',
-                            pink: '#f472b6',
-                            cyan: '#22d3ee',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
     <style>
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: #2a2a38 transparent;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #2a2a38;
-            border-radius: 3px;
-        }
-
-        .glass {
-            background: rgba(26, 26, 36, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .glass-card {
-            background: linear-gradient(135deg, rgba(26, 26, 36, 0.9) 0%, rgba(18, 18, 26, 0.95) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .glow-blue {
-            box-shadow: 0 0 20px rgba(96, 165, 250, 0.15);
-        }
-
-        .glow-green {
-            box-shadow: 0 0 20px rgba(52, 211, 153, 0.15);
-        }
-
-        .glow-purple {
-            box-shadow: 0 0 20px rgba(167, 139, 250, 0.15);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-item.active {
-            background: linear-gradient(135deg, rgba(96, 165, 250, 0.15) 0%, rgba(96, 165, 250, 0.05) 100%);
-        }
-
-        .nav-item.active .nav-icon {
-            color: #60a5fa;
+        body {
+            font-family: 'Inter', sans-serif;
         }
 
         .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        .filled {
-            font-variation-settings: 'FILL' 1, 'wght' 500;
-        }
-
-        @keyframes countUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-count {
-            animation: countUp 0.5s ease-out forwards;
-        }
-
-        .progress-ring {
-            transform: rotate(-90deg);
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 24px;
+            vertical-align: middle;
         }
     </style>
 </head>
 
-<body class="bg-dark-900 text-gray-100 font-sans min-h-screen">
-    <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar Navigation -->
-        <aside class="hidden lg:flex flex-col w-64 bg-dark-800 border-r border-white/5 p-4">
-            <!-- Logo -->
-            <div class="flex items-center gap-3 px-3 py-4 mb-6">
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header -->
+    <header class="bg-gray-800 border-b border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
                 <div
-                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center">
-                    <span class="material-symbols-outlined text-white text-xl">school</span>
+                    class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-xl font-bold">
+                    <%= user.fullname.charAt(0) %>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg text-white">EduPortal</h1>
-                    <p class="text-[10px] text-gray-500 uppercase tracking-wider">Student Panel</p>
+                    <h1 class="text-lg font-bold">
+                        <%= user.fullname %>
+                    </h1>
+                    <p class="text-gray-400 text-sm">
+                        <%= user.email %>
+                    </p>
                 </div>
             </div>
-
-            <!-- Profile Card -->
-            <div class="glass-card rounded-2xl p-4 mb-6">
-                <div class="flex items-center gap-3">
-                    <div class="relative">
-                        <div
-                            class="w-12 h-12 rounded-full bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center text-lg font-bold">
-                            <%= user.fullname.charAt(0) %>
-                        </div>
-                        <div
-                            class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-accent-green rounded-full border-2 border-dark-800">
-                        </div>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-semibold text-sm truncate">
-                            <%= user.fullname %>
-                        </p>
-                        <p class="text-xs text-gray-500">B.Tech CSE • Sem 4</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation -->
-            <nav class="flex-1 space-y-1">
-                <a href="/"
-                    class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200">
-                    <span class="material-symbols-outlined nav-icon filled text-xl">dashboard</span>
-                    <span class="text-sm font-medium">Dashboard</span>
-                </a>
-                <a href="#"
-                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
-                    <span class="material-symbols-outlined nav-icon text-xl">menu_book</span>
-                    <span class="text-sm font-medium">Courses</span>
-                </a>
-                <a href="#"
-                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
-                    <span class="material-symbols-outlined nav-icon text-xl">assignment</span>
-                    <span class="text-sm font-medium">Assignments</span>
-                </a>
-                <a href="#"
-                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
-                    <span class="material-symbols-outlined nav-icon text-xl">analytics</span>
-                    <span class="text-sm font-medium">Grades</span>
-                </a>
-                <a href="#"
-                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
-                    <span class="material-symbols-outlined nav-icon text-xl">event_note</span>
-                    <span class="text-sm font-medium">Schedule</span>
-                </a>
-                <a href="#"
-                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
-                    <span class="material-symbols-outlined nav-icon text-xl">folder_open</span>
-                    <span class="text-sm font-medium">Resources</span>
-                </a>
-            </nav>
-
-            <!-- Bottom Actions -->
-            <div class="border-t border-white/5 pt-4 space-y-1">
-                <a href="#"
-                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-600 transition-all duration-200">
-                    <span class="material-symbols-outlined nav-icon text-xl">settings</span>
-                    <span class="text-sm font-medium">Settings</span>
-                </a>
-                <a href="/logout"
-                    class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-200">
-                    <span class="material-symbols-outlined nav-icon text-xl">logout</span>
-                    <span class="text-sm font-medium">Logout</span>
-                </a>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto">
-            <!-- Top Bar -->
-            <header class="sticky top-0 z-40 glass border-b border-white/5 px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <button class="lg:hidden p-2 rounded-lg hover:bg-dark-600 transition-colors">
-                            <span class="material-symbols-outlined">menu</span>
-                        </button>
-                        <div>
-                            <h2 class="text-xl font-semibold">Welcome back, <%= user.fullname.split(' ')[0] %>! 👋</h2>
-                            <p class="text-sm text-gray-500">Here' s your academic overview</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button class="relative p-2.5 rounded-xl bg-dark-700 hover:bg-dark-600 transition-colors">
-                            <span class="material-symbols-outlined text-gray-400">notifications</span>
-                            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-accent-blue rounded-full"></span>
-                        </button>
-                        <div class="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-dark-700">
-                            <span class="material-symbols-outlined text-accent-green text-sm">calendar_today</span>
-                            <span class="text-sm text-gray-300">
-                                <%= new Date().toLocaleDateString('en-US', { weekday: 'short' , month: 'short' ,
-                                    day: 'numeric' }) %>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Dashboard Content -->
-            <div class="p-6 space-y-6">
-                <!-- Stats Row -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- CGPA Card -->
-                    <div class="stat-card glass-card rounded-2xl p-5 glow-blue transition-all duration-300">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="p-2.5 rounded-xl bg-accent-blue/20">
-                                <span class="material-symbols-outlined text-accent-blue">trending_up</span>
-                            </div>
-                            <span
-                                class="text-xs text-accent-green font-medium px-2 py-1 rounded-full bg-accent-green/10">+0.2</span>
-                        </div>
-                        <% const avgGrade=marks.length> 0 ? (marks.reduce((sum, m) => sum + m.marks, 0) /
-                            marks.length).toFixed(1) : 0; %>
-                            <p class="text-3xl font-bold text-white mb-1">
-                                <%= avgGrade %>%
-                            </p>
-                            <p class="text-sm text-gray-500">Average Grade</p>
-                            <div class="mt-3 h-1.5 bg-dark-600 rounded-full overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-accent-blue to-accent-purple rounded-full"
-                                    style="width: <%= avgGrade %>%"></div>
-                            </div>
-                    </div>
-
-                    <!-- Attendance Card -->
-                    <div class="stat-card glass-card rounded-2xl p-5 glow-green transition-all duration-300">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="p-2.5 rounded-xl bg-accent-green/20">
-                                <span class="material-symbols-outlined text-accent-green">fact_check</span>
-                            </div>
-                            <span class="text-xs text-gray-400 font-medium">
-                                <%= presentDays %>/<%= totalDays %> days
-                            </span>
-                        </div>
-                        <p class="text-3xl font-bold text-white mb-1">
-                            <%= attendancePercentage %>%
-                        </p>
-                        <p class="text-sm text-gray-500">Attendance</p>
-                        <div class="mt-3 h-1.5 bg-dark-600 rounded-full overflow-hidden">
-                            <div class="h-full bg-gradient-to-r from-accent-green to-accent-cyan rounded-full"
-                                style="width: <%= attendancePercentage %>%"></div>
-                        </div>
-                    </div>
-
-                    <!-- Pending Tasks -->
-                    <div class="stat-card glass-card rounded-2xl p-5 glow-purple transition-all duration-300">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="p-2.5 rounded-xl bg-accent-purple/20">
-                                <span class="material-symbols-outlined text-accent-purple">pending_actions</span>
-                            </div>
-                            <span
-                                class="text-xs text-accent-orange font-medium px-2 py-1 rounded-full bg-accent-orange/10">Due
-                                Soon</span>
-                        </div>
-                        <p class="text-3xl font-bold text-white mb-1">
-                            <%= assignments.filter(a=> a.status === 'pending').length %>
-                        </p>
-                        <p class="text-sm text-gray-500">Pending Tasks</p>
-                        <div class="mt-3 flex gap-1">
-                            <% for(let i=0; i < Math.min(5, assignments.filter(a=> a.status === 'pending').length); i++)
-                                { %>
-                                <div class="flex-1 h-1.5 bg-accent-orange/50 rounded-full"></div>
-                                <% } %>
-                                    <% for(let i=0; i < 5 - Math.min(5, assignments.filter(a=> a.status ===
-                                        'pending').length); i++) { %>
-                                        <div class="flex-1 h-1.5 bg-dark-600 rounded-full"></div>
-                                        <% } %>
-                        </div>
-                    </div>
-
-                    <!-- Credits -->
-                    <div class="stat-card glass-card rounded-2xl p-5 transition-all duration-300">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="p-2.5 rounded-xl bg-accent-pink/20">
-                                <span class="material-symbols-outlined text-accent-pink">school</span>
-                            </div>
-                            <span class="text-xs text-gray-400 font-medium">Semester 4</span>
-                        </div>
-                        <p class="text-3xl font-bold text-white mb-1">18/24</p>
-                        <p class="text-sm text-gray-500">Credits Earned</p>
-                        <div class="mt-3 h-1.5 bg-dark-600 rounded-full overflow-hidden">
-                            <div class="h-full bg-gradient-to-r from-accent-pink to-accent-orange rounded-full"
-                                style="width: 75%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Charts Row -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Performance Chart -->
-                    <div class="lg:col-span-2 glass-card rounded-2xl p-6">
-                        <div class="flex items-center justify-between mb-6">
-                            <div>
-                                <h3 class="text-lg font-semibold">Academic Performance</h3>
-                                <p class="text-sm text-gray-500">Subject-wise marks analysis</p>
-                            </div>
-                            <select
-                                class="bg-dark-600 border-0 rounded-lg px-3 py-2 text-sm text-gray-300 focus:ring-2 focus:ring-accent-blue">
-                                <option>This Semester</option>
-                                <option>Last Semester</option>
-                                <option>All Time</option>
-                            </select>
-                        </div>
-                        <div class="h-64">
-                            <canvas id="performanceChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Attendance Ring -->
-                    <div class="glass-card rounded-2xl p-6">
-                        <div class="flex items-center justify-between mb-6">
-                            <div>
-                                <h3 class="text-lg font-semibold">Attendance</h3>
-                                <p class="text-sm text-gray-500">This semester</p>
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="relative w-40 h-40">
-                                <svg class="w-full h-full progress-ring" viewBox="0 0 100 100">
-                                    <circle cx="50" cy="50" r="42" fill="none" stroke="#1a1a24" stroke-width="10" />
-                                    <circle cx="50" cy="50" r="42" fill="none" stroke="url(#attendanceGradient)"
-                                        stroke-width="10" stroke-linecap="round"
-                                        stroke-dasharray="<%= 2 * Math.PI * 42 %>"
-                                        stroke-dashoffset="<%= 2 * Math.PI * 42 * (1 - attendancePercentage / 100) %>" />
-                                    <defs>
-                                        <linearGradient id="attendanceGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                            <stop offset="0%" stop-color="#34d399" />
-                                            <stop offset="100%" stop-color="#22d3ee" />
-                                        </linearGradient>
-                                    </defs>
-                                </svg>
-                                <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span class="text-3xl font-bold">
-                                        <%= attendancePercentage %>%
-                                    </span>
-                                    <span class="text-xs text-gray-500">Present</span>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4 mt-6 w-full">
-                                <div class="text-center p-3 bg-dark-600 rounded-xl">
-                                    <p class="text-xl font-bold text-accent-green">
-                                        <%= presentDays %>
-                                    </p>
-                                    <p class="text-xs text-gray-500">Present</p>
-                                </div>
-                                <div class="text-center p-3 bg-dark-600 rounded-xl">
-                                    <p class="text-xl font-bold text-red-400">
-                                        <%= totalDays - presentDays %>
-                                    </p>
-                                    <p class="text-xs text-gray-500">Absent</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bottom Row -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Today's Schedule -->
-                    <div class="glass-card rounded-2xl p-6">
-                        <div class="flex items-center justify-between mb-6">
-                            <div>
-                                <h3 class="text-lg font-semibold">Today's Schedule</h3>
-                                <p class="text-sm text-gray-500">
-                                    <%= new Date().toLocaleDateString('en-US', { weekday: 'long' }) %>
-                                </p>
-                            </div>
-                            <span class="material-symbols-outlined text-gray-500">calendar_month</span>
-                        </div>
-                        <div class="space-y-3">
-                            <div
-                                class="flex items-center gap-4 p-3 bg-dark-600 rounded-xl border-l-4 border-accent-blue">
-                                <div class="text-center min-w-[50px]">
-                                    <p class="text-sm font-bold">9:00</p>
-                                    <p class="text-[10px] text-gray-500">AM</p>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="font-medium text-sm">Mathematics</p>
-                                    <p class="text-xs text-gray-500 flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-xs">location_on</span>
-                                        Room 302
-                                    </p>
-                                </div>
-                                <span
-                                    class="px-2 py-1 text-[10px] bg-accent-blue/20 text-accent-blue rounded-full">Lecture</span>
-                            </div>
-                            <div
-                                class="flex items-center gap-4 p-3 bg-dark-600 rounded-xl border-l-4 border-accent-green">
-                                <div class="text-center min-w-[50px]">
-                                    <p class="text-sm font-bold">11:00</p>
-                                    <p class="text-[10px] text-gray-500">AM</p>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="font-medium text-sm">Physics Lab</p>
-                                    <p class="text-xs text-gray-500 flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-xs">location_on</span>
-                                        Lab 101
-                                    </p>
-                                </div>
-                                <span
-                                    class="px-2 py-1 text-[10px] bg-accent-green/20 text-accent-green rounded-full">Lab</span>
-                            </div>
-                            <div
-                                class="flex items-center gap-4 p-3 bg-dark-600 rounded-xl border-l-4 border-accent-purple">
-                                <div class="text-center min-w-[50px]">
-                                    <p class="text-sm font-bold">2:00</p>
-                                    <p class="text-[10px] text-gray-500">PM</p>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="font-medium text-sm">Data Structures</p>
-                                    <p class="text-xs text-gray-500 flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-xs">location_on</span>
-                                        Room 405
-                                    </p>
-                                </div>
-                                <span
-                                    class="px-2 py-1 text-[10px] bg-accent-purple/20 text-accent-purple rounded-full">Lecture</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Assignments -->
-                    <div class="glass-card rounded-2xl p-6">
-                        <div class="flex items-center justify-between mb-6">
-                            <div>
-                                <h3 class="text-lg font-semibold">Assignments</h3>
-                                <p class="text-sm text-gray-500">Upcoming deadlines</p>
-                            </div>
-                            <a href="#" class="text-accent-blue text-sm hover:underline">View All</a>
-                        </div>
-                        <div class="space-y-3">
-                            <% assignments.forEach((assignment, i)=> { %>
-                                <div
-                                    class="p-3 bg-dark-600 rounded-xl hover:bg-dark-500 transition-colors cursor-pointer">
-                                    <div class="flex items-start justify-between mb-2">
-                                        <div class="flex items-center gap-2">
-                                            <div
-                                                class="w-8 h-8 rounded-lg <%= assignment.status === 'pending' ? 'bg-accent-orange/20' : 'bg-accent-green/20' %> flex items-center justify-center">
-                                                <span
-                                                    class="material-symbols-outlined text-sm <%= assignment.status === 'pending' ? 'text-accent-orange' : 'text-accent-green' %>">
-                                                    <%= assignment.status==='pending' ? 'schedule' : 'check_circle' %>
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <p class="text-sm font-medium">
-                                                    <%= assignment.title.substring(0, 25) %>...
-                                                </p>
-                                                <p class="text-xs text-gray-500">Due: <%= new
-                                                        Date(assignment.due_date).toLocaleDateString('en-US', {
-                                                        month: 'short' , day: 'numeric' }) %>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <span
-                                            class="text-xs px-2 py-1 rounded-full <%= assignment.status === 'pending' ? 'bg-accent-orange/10 text-accent-orange' : 'bg-accent-green/10 text-accent-green' %>">
-                                            <%= assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)
-                                                %>
-                                        </span>
-                                        <% if(assignment.status==='pending' ) { %>
-                                            <button class="text-xs text-accent-blue hover:underline">Submit</button>
-                                            <% } %>
-                                    </div>
-                                </div>
-                                <% }); %>
-                        </div>
-                    </div>
-
-                    <!-- Recent Grades -->
-                    <div class="glass-card rounded-2xl p-6">
-                        <div class="flex items-center justify-between mb-6">
-                            <div>
-                                <h3 class="text-lg font-semibold">Recent Grades</h3>
-                                <p class="text-sm text-gray-500">Latest results</p>
-                            </div>
-                            <a href="#" class="text-accent-blue text-sm hover:underline">View All</a>
-                        </div>
-                        <div class="space-y-3">
-                            <% marks.forEach((mark, i)=> {
-                                const gradeColor = mark.marks >= 90 ? 'accent-green' : mark.marks >= 75 ? 'accent-blue'
-                                : mark.marks >= 60 ? 'accent-orange' : 'red-400';
-                                %>
-                                <div class="flex items-center justify-between p-3 bg-dark-600 rounded-xl">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-10 h-10 rounded-xl bg-gradient-to-br from-<%= gradeColor %>/30 to-<%= gradeColor %>/10 flex items-center justify-center">
-                                            <span class="text-sm font-bold text-<%= gradeColor %>">
-                                                <%= mark.marks>= 90 ? 'A' : mark.marks >= 75 ? 'B' : mark.marks >= 60 ?
-                                                    'C' : 'D' %>
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm font-medium">
-                                                <%= mark.subject %>
-                                            </p>
-                                            <p class="text-xs text-gray-500">Mid-term Exam</p>
-                                        </div>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-lg font-bold text-<%= gradeColor %>">
-                                            <%= mark.marks %>
-                                        </p>
-                                        <p class="text-xs text-gray-500">/100</p>
-                                    </div>
-                                </div>
-                                <% }); %>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Mobile Bottom Nav -->
-    <nav class="lg:hidden fixed bottom-0 left-0 right-0 glass border-t border-white/5 px-4 py-2 z-50">
-        <div class="flex items-center justify-around">
-            <a href="/" class="flex flex-col items-center gap-1 text-accent-blue">
-                <span class="material-symbols-outlined filled text-xl">dashboard</span>
-                <span class="text-[10px] font-medium">Home</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-1 text-gray-500">
-                <span class="material-symbols-outlined text-xl">menu_book</span>
-                <span class="text-[10px] font-medium">Courses</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-1 text-gray-500">
-                <span class="material-symbols-outlined text-xl">assignment</span>
-                <span class="text-[10px] font-medium">Tasks</span>
-            </a>
-            <a href="#" class="flex flex-col items-center gap-1 text-gray-500">
-                <span class="material-symbols-outlined text-xl">analytics</span>
-                <span class="text-[10px] font-medium">Grades</span>
-            </a>
-            <a href="/logout" class="flex flex-col items-center gap-1 text-gray-500">
-                <span class="material-symbols-outlined text-xl">logout</span>
-                <span class="text-[10px] font-medium">Exit</span>
+            <a href="/logout"
+                class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-lg flex items-center gap-2">
+                <span class="material-symbols-outlined">logout</span>
+                Logout
             </a>
         </div>
-    </nav>
+    </header>
 
-    <script>
-        // Performance Chart
-        const ctx = document.getElementById('performanceChart').getContext('2d');
-        const marks = <% - JSON.stringify(marks) %>;
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <!-- Attendance Card -->
+            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-gray-400 text-sm font-medium">Attendance</h3>
+                    <span class="material-symbols-outlined text-blue-400">calendar_today</span>
+                </div>
+                <p class="text-4xl font-bold text-blue-400">
+                    <%= attendancePercentage %>%
+                </p>
+                <p class="text-gray-500 text-sm mt-1">
+                    <%= presentDays %> / <%= totalDays %> days present
+                </p>
+                <div class="mt-3 h-2 bg-gray-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-500 rounded-full" style="width: <%= attendancePercentage %>%"></div>
+                </div>
+            </div>
 
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: marks.map(m => m.subject),
-                datasets: [{
-                    label: 'Marks',
-                    data: marks.map(m => m.marks),
-                    backgroundColor: marks.map((m, i) => {
-                        const colors = ['rgba(96, 165, 250, 0.8)', 'rgba(52, 211, 153, 0.8)', 'rgba(167, 139, 250, 0.8)', 'rgba(251, 146, 60, 0.8)'];
-                        return colors[i % colors.length];
-                    }),
-                    borderRadius: 8,
-                    borderSkipped: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#6b7280', font: { size: 11 } }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { color: '#6b7280', font: { size: 11 } }
-                    }
-                }
-            }
-        });
-    </script>
+            <!-- Grades Card -->
+            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-gray-400 text-sm font-medium">Total Subjects</h3>
+                    <span class="material-symbols-outlined text-green-400">school</span>
+                </div>
+                <p class="text-4xl font-bold text-green-400">
+                    <%= marks.length %>
+                </p>
+                <p class="text-gray-500 text-sm mt-1">Subjects graded</p>
+            </div>
+
+            <!-- Assignments Card -->
+            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-gray-400 text-sm font-medium">Assignments</h3>
+                    <span class="material-symbols-outlined text-orange-400">assignment</span>
+                </div>
+                <p class="text-4xl font-bold text-orange-400">
+                    <%= assignments.filter(a=> a.status === 'pending').length %>
+                </p>
+                <p class="text-gray-500 text-sm mt-1">Pending submissions</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Attendance History -->
+            <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-700 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-blue-400">event_available</span>
+                    <h2 class="text-lg font-semibold">Recent Attendance</h2>
+                </div>
+                <div class="p-4">
+                    <% if(attendanceRecords.length> 0) { %>
+                        <div class="space-y-2">
+                            <% attendanceRecords.forEach(function(record) { %>
+                                <div class="flex items-center justify-between bg-gray-700/50 rounded-lg px-4 py-3">
+                                    <span class="text-gray-300">
+                                        <%= record.date %>
+                                    </span>
+                                    <% if(record.status==='present' ) { %>
+                                        <span
+                                            class="inline-flex items-center gap-1 text-green-400 bg-green-500/20 px-3 py-1 rounded-full text-sm">
+                                            <span class="material-symbols-outlined text-sm">check_circle</span>
+                                            Present
+                                        </span>
+                                        <% } else { %>
+                                            <span
+                                                class="inline-flex items-center gap-1 text-red-400 bg-red-500/20 px-3 py-1 rounded-full text-sm">
+                                                <span class="material-symbols-outlined text-sm">cancel</span>
+                                                Absent
+                                            </span>
+                                            <% } %>
+                                </div>
+                                <% }); %>
+                        </div>
+                        <% } else { %>
+                            <div class="text-center py-8 text-gray-500">
+                                <span class="material-symbols-outlined text-4xl mb-2 block">event_busy</span>
+                                <p>No attendance records yet</p>
+                            </div>
+                            <% } %>
+                </div>
+            </div>
+
+            <!-- Grades -->
+            <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-700 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-green-400">grade</span>
+                    <h2 class="text-lg font-semibold">My Grades</h2>
+                </div>
+                <div class="p-4">
+                    <% if(marks.length> 0) { %>
+                        <div class="space-y-2">
+                            <% marks.forEach(function(mark) { let gradeColor='text-green-400 bg-green-500/20' ;
+                                if(mark.marks < 40) gradeColor='text-red-400 bg-red-500/20' ; else if(mark.marks < 60)
+                                gradeColor='text-yellow-400 bg-yellow-500/20' ; else if(mark.marks < 75)
+                                gradeColor='text-blue-400 bg-blue-500/20' ; %>
+                                <div class="flex items-center justify-between bg-gray-700/50 rounded-lg px-4 py-3">
+                                    <div>
+                                        <p class="font-medium text-gray-200">
+                                            <%= mark.subject %>
+                                        </p>
+                                        <p class="text-xs text-gray-500">
+                                            <%= mark.date %>
+                                        </p>
+                                    </div>
+                                    <span class="<%= gradeColor %> px-3 py-1 rounded-full text-sm font-semibold">
+                                        <%= mark.marks %>/100
+                                    </span>
+                                </div>
+                                <% }); %>
+                        </div>
+                        <% } else { %>
+                            <div class="text-center py-8 text-gray-500">
+                                <span class="material-symbols-outlined text-4xl mb-2 block">school</span>
+                                <p>No grades available yet</p>
+                            </div>
+                            <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignments -->
+        <div class="mt-6 bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-700 flex items-center gap-2">
+                <span class="material-symbols-outlined text-orange-400">assignment</span>
+                <h2 class="text-lg font-semibold">My Assignments</h2>
+            </div>
+            <div class="p-4">
+                <% if(assignments.length> 0) { %>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <% assignments.forEach(function(assignment) { %>
+                            <div class="bg-gray-700/50 rounded-lg p-4">
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <h4 class="font-medium text-gray-200">
+                                            <%= assignment.title %>
+                                        </h4>
+                                        <p class="text-sm text-gray-500 flex items-center gap-1 mt-1">
+                                            <span class="material-symbols-outlined text-sm">schedule</span>
+                                            Due: <%= assignment.due_date %>
+                                        </p>
+                                    </div>
+                                    <% if(assignment.status==='submitted' ) { %>
+                                        <span
+                                            class="inline-flex items-center text-green-400 bg-green-500/20 px-2 py-1 rounded text-xs">
+                                            Submitted
+                                        </span>
+                                        <% } else { %>
+                                            <span
+                                                class="inline-flex items-center text-orange-400 bg-orange-500/20 px-2 py-1 rounded text-xs">
+                                                Pending
+                                            </span>
+                                            <% } %>
+                                </div>
+                            </div>
+                            <% }); %>
+                    </div>
+                    <% } else { %>
+                        <div class="text-center py-8 text-gray-500">
+                            <span class="material-symbols-outlined text-4xl mb-2 block">task</span>
+                            <p>No assignments yet</p>
+                        </div>
+                        <% } %>
+            </div>
+        </div>
+    </main>
 </body>
 
 </html>
