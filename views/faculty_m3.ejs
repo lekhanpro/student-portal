@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Faculty Dashboard - Student Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols_Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "md-sys-color-primary": "#006493",
+                        "md-sys-color-on-primary": "#ffffff",
+                        "md-sys-color-primary-container": "#cae6ff",
+                        "md-sys-color-on-primary-container": "#001e30",
+                        "md-sys-color-secondary": "#50606e",
+                        "md-sys-color-on-secondary": "#ffffff",
+                        "md-sys-color-secondary-container": "#d3e5f5",
+                        "md-sys-color-on-secondary-container": "#0c1d29",
+                        "md-sys-color-tertiary": "#65587b",
+                        "md-sys-color-error": "#ba1a1a",
+                        "md-sys-color-background": "#fcfcff",
+                        "md-sys-color-on-background": "#1a1c1e",
+                        "md-sys-color-surface": "#fcfcff",
+                        "md-sys-color-on-surface": "#1a1c1e",
+                        "md-sys-color-surface-variant": "#dee3eb",
+                        "md-sys-color-on-surface-variant": "#41474d",
+                        "md-sys-color-outline": "#72777f",
+                        "md-sys-color-outline-variant": "#c2c7ce",
+                        "md-sys-color-surface-container-highest": "#e2e2e6",
+                        "md-sys-color-surface-container-high": "#e8e8ec",
+                        "md-sys-color-surface-container": "#eeeff1",
+                    },
+                    fontFamily: {
+                        "sans": ["Roboto", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .m3-switch {
+            appearance: none;
+            position: relative;
+            width: 52px;
+            height: 32px;
+            border-radius: 100px;
+            border: 2px solid var(--md-sys-color-outline);
+            background-color: var(--md-sys-color-surface-container-highest);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .m3-switch::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 6px;
+            transform: translatey(-50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--md-sys-color-outline);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .m3-switch:checked {
+            background-color: #006493;
+            border-color: #006493;
+        }
+
+        .m3-switch:checked::after {
+            background-color: #fff;
+            width: 24px;
+            height: 24px;
+            left: calc(100% - 28px);
+        }
+    </style>
+</head>
+
+<body class="bg-md-sys-color-background text-md-sys-color-on-background font-sans h-screen flex overflow-hidden">
+    <!-- Top App Bar -->
+    <div class="flex-1 flex flex-col h-full">
+        <header
+            class="h-16 flex items-center justify-between px-4 md:px-6 bg-md-sys-color-surface sticky top-0 z-30 border-b border-md-sys-color-outline-variant">
+            <div class="flex items-center gap-4">
+                <h2 class="text-xl font-normal text-md-sys-color-on-surface">Faculty Dashboard</h2>
+                <p class="text-sm text-md-sys-color-on-surface-variant hidden md:block">Spring 2024</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-md-sys-color-on-surface-variant hidden md:block">Welcome, <%= user.fullname %></span>
+                <a href="/logout"
+                    class="flex items-center gap-2 px-4 py-2 rounded-full bg-md-sys-color-primary text-md-sys-color-on-primary hover:shadow-md transition-shadow text-sm font-medium">
+                    <span class="material-symbols-outlined text-[18px]">logout</span>
+                    Logout
+                </a>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto px-4 py-6 md:px-8">
+            <div class="max-w-7xl mx-auto flex flex-col gap-6">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-md-sys-color-surface-container rounded-xl p-5 shadow-sm">
+                        <div class="flex items-start justify-between mb-2">
+                            <div>
+                                <p class="text-sm font-medium text-md-sys-color-on-surface-variant">Total Students</p>
+                                <p class="text-3xl font-normal text-md-sys-color-on-surface mt-1">
+                                    <%= students.length %>
+                                </p>
+                            </div>
+                            <div
+                                class="p-2 bg-md-sys-color-primary-container text-md-sys-color-on-primary-container rounded-full">
+                                <span class="material-symbols-outlined text-[20px]">person</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-md-sys-color-surface-container rounded-xl p-5 shadow-sm">
+                        <div class="flex items-start justify-between mb-2">
+                            <div>
+                                <p class="text-sm font-medium text-md-sys-color-on-surface-variant">Marked Today</p>
+                                <p class="text-3xl font-normal text-md-sys-color-on-surface mt-1">
+                                    <%= Object.keys(attendanceMap).length %>
+                                </p>
+                            </div>
+                            <div
+                                class="p-2 bg-md-sys-color-secondary-container text-md-sys-color-on-secondary-container rounded-full">
+                                <span class="material-symbols-outlined text-[20px]">checklist</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-md-sys-color-surface-container rounded-xl p-5 shadow-sm">
+                        <div class="flex items-start justify-between mb-2">
+                            <div>
+                                <p class="text-sm font-medium text-md-sys-color-on-surface-variant">Date</p>
+                                <p class="text-lg font-normal text-md-sys-color-on-surface mt-1">
+                                    <%= today %>
+                                </p>
+                            </div>
+                            <div class="p-2 bg-md-sys-color-tertiary/20 text-md-sys-color-tertiary rounded-full">
+                                <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Roster -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-2">
+                    <h3 class="text-xl font-normal text-md-sys-color-on-surface">Mark Attendance - <%= today %>
+                    </h3>
+                </div>
+
+                <div
+                    class="bg-md-sys-color-surface rounded-xl border border-md-sys-color-outline-variant overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr
+                                    class="bg-md-sys-color-surface-container-high border-b border-md-sys-color-outline-variant">
+                                    <th class="px-6 py-4 text-sm font-medium text-md-sys-color-on-surface-variant">
+                                        Student</th>
+                                    <th class="px-6 py-4 text-sm font-medium text-md-sys-color-on-surface-variant">Email
+                                    </th>
+                                    <th
+                                        class="px-6 py-4 text-sm font-medium text-md-sys-color-on-surface-variant text-center">
+                                        Present</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-md-sys-color-outline-variant">
+                                <% students.forEach(student=> {
+                                    const status = attendanceMap[student.id];
+                                    const isPresent = status === 'present';
+                                    %>
+                                    <tr class="hover:bg-md-sys-color-surface-container-highest transition-colors">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div
+                                                    class="h-10 w-10 rounded-full bg-md-sys-color-primary/20 flex items-center justify-center text-md-sys-color-primary font-bold">
+                                                    <%= student.fullname.charAt(0) %>
+                                                </div>
+                                                <div>
+                                                    <div class="text-md-sys-color-on-surface font-medium text-sm">
+                                                        <%= student.fullname %>
+                                                    </div>
+                                                    <div class="text-md-sys-color-on-surface-variant text-xs">Student
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-md-sys-color-on-surface-variant text-sm">
+                                            <%= student.email %>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="flex justify-center">
+                                                <input <%=isPresent ? 'checked' : '' %>
+                                                class="m3-switch"
+                                                type="checkbox"
+                                                onchange="markAttendance(<%= student.id %>, this.checked ? 'present' :
+                                                    'absent')"
+                                                    />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Submit Marks Section -->
+                <div class="bg-md-sys-color-surface-container rounded-xl p-6 mt-4">
+                    <h3 class="text-xl font-normal text-md-sys-color-on-surface mb-4">Submit Marks</h3>
+                    <form onsubmit="submitMarks(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <select class="px-4 py-3 rounded-lg border border-md-sys-color-outline bg-md-sys-color-surface"
+                            id="student_id" name="student_id" required>
+                            <option value="">Select Student...</option>
+                            <% students.forEach(student=> { %>
+                                <option value="<%= student.id %>">
+                                    <%= student.fullname %>
+                                </option>
+                                <% }); %>
+                        </select>
+                        <select class="px-4 py-3 rounded-lg border border-md-sys-color-outline bg-md-sys-color-surface"
+                            id="subject" name="subject" required>
+                            <option value="">Subject...</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="English">English</option>
+                        </select>
+                        <input class="px-4 py-3 rounded-lg border border-md-sys-color-outline bg-md-sys-color-surface"
+                            id="marks" name="marks" type="number" min="0" max="100" placeholder="Marks (0-100)"
+                            required />
+                        <button
+                            class="px-6 py-3 rounded-full bg-md-sys-color-primary text-md-sys-color-on-primary font-medium hover:shadow-md transition-shadow"
+                            type="submit">
+                            Submit Marks
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/charts.js"></script>
+</body>
+
+</html>

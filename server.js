@@ -155,7 +155,7 @@ app.get('/login', (req, res) => {
     if (req.session.user) {
         return res.redirect('/');
     }
-    res.render('login', { error: null });
+    res.render('login_m3', { error: null });
 });
 
 // Login Handler
@@ -173,7 +173,7 @@ app.post('/login', (req, res) => {
         };
         res.redirect(`/${user.role}`);
     } else {
-        res.render('login', { error: 'Invalid email or password' });
+        res.render('login_m3', { error: 'Invalid email or password' });
     }
 });
 
@@ -217,7 +217,7 @@ app.get('/student', requireAuth, requireRole('student'), (req, res) => {
     ORDER BY due_date
   `).all(userId);
 
-    res.render('student', {
+    res.render('student_m3', {
         user: req.session.user,
         attendanceRecords,
         attendancePercentage,
@@ -249,7 +249,7 @@ app.get('/faculty', requireAuth, requireRole('faculty'), (req, res) => {
         attendanceMap[a.student_id] = a.status;
     });
 
-    res.render('faculty', {
+    res.render('faculty_m3', {
         user: req.session.user,
         students,
         attendanceMap,
@@ -267,7 +267,7 @@ app.get('/admin', requireAuth, requireRole('admin'), (req, res) => {
         totalFaculty: allUsers.filter(u => u.role === 'faculty').length
     };
 
-    res.render('admin', {
+    res.render('admin_m3', {
         user: req.session.user,
         users: allUsers,
         stats
@@ -346,6 +346,33 @@ app.post('/api/delete-user', requireAuth, requireRole('admin'), (req, res) => {
 
     db.prepare('DELETE FROM users WHERE id = ?').run(user_id);
     res.json({ success: true, message: 'User deleted successfully' });
+});
+
+// Admin: Add User (Form submission)
+app.post('/admin/add-user', requireAuth, requireRole('admin'), (req, res) => {
+    const { email, password, role, fullname } = req.body;
+
+    try {
+        db.prepare(`
+      INSERT INTO users (email, password, role, fullname) 
+      VALUES (?, ?, ?, ?)
+    `).run(email, password, role, fullname);
+        res.redirect('/admin');
+    } catch (error) {
+        res.redirect('/admin?error=email_exists');
+    }
+});
+
+// Admin: Delete User (Form submission)
+app.post('/admin/delete-user', requireAuth, requireRole('admin'), (req, res) => {
+    const { user_id } = req.body;
+
+    // Prevent admin from deleting themselves
+    if (user_id != req.session.user.id) {
+        db.prepare('DELETE FROM users WHERE id = ?').run(user_id);
+    }
+
+    res.redirect('/admin');
 });
 
 // Start server

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Admin Dashboard - Student Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "md-sys-color-primary": "#006493",
+                        "md-sys-color-on-primary": "#ffffff",
+                        "md-sys-color-primary-container": "#cae6ff",
+                        "md-sys-color-on-primary-container": "#001e30",
+                        "md-sys-color-secondary": "#50606e",
+                        "md-sys-color-on-secondary": "#ffffff",
+                        "md-sys-color-secondary-container": "#d3e5f5",
+                        "md-sys-color-on-secondary-container": "#0c1d29",
+                        "md-sys-color-tertiary": "#65587b",
+                        "md-sys-color-error": "#ba1a1a",
+                        "md-sys-color-on-error": "#ffffff",
+                        "md-sys-color-error-container": "#ffdad6",
+                        "md-sys-color-background": "#fcfcff",
+                        "md-sys-color-on-background": "#1a1c1e",
+                        "md-sys-color-surface": "#fcfcff",
+                        "md-sys-color-on-surface": "#1a1c1e",
+                        "md-sys-color-surface-variant": "#dee3eb",
+                        "md-sys-color-on-surface-variant": "#41474d",
+                        "md-sys-color-outline": "#72777f",
+                        "md-sys-color-outline-variant": "#c2c7ce",
+                        "md-sys-color-surface-container-highest": "#e2e2e6",
+                        "md-sys-color-surface-container-high": "#e8e8ec",
+                        "md-sys-color-surface-container": "#eeeff1",
+                    },
+                    fontFamily: {
+                        "sans": ["Roboto", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body
+    class="bg-md-sys-color-background text-md-sys-color-on-background font-sans h-screen flex flex-col overflow-hidden">
+    <!-- Top App Bar -->
+    <header
+        class="h-16 flex items-center justify-between px-4 md:px-6 bg-md-sys-color-surface sticky top-0 z-30 border-b border-md-sys-color-outline-variant shrink-0">
+        <div class="flex items-center gap-4">
+            <h2 class="text-xl font-normal text-md-sys-color-on-surface">Admin Dashboard</h2>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="text-md-sys-color-on-surface-variant text-sm hidden md:block">Welcome, <%= user.fullname %>
+                    </span>
+            <a href="/logout"
+                class="flex items-center gap-2 px-4 py-2 rounded-full bg-md-sys-color-primary text-md-sys-color-on-primary hover:shadow-md transition-shadow text-sm font-medium">
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto px-4 py-6 md:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col gap-6">
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-md-sys-color-surface-container rounded-xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-sm font-medium text-md-sys-color-on-surface-variant">Total Users</p>
+                        <span class="material-symbols-outlined text-md-sys-color-primary">people</span>
+                    </div>
+                    <p class="text-3xl font-normal text-md-sys-color-on-surface">
+                        <%= users.length %>
+                    </p>
+                </div>
+                <div class="bg-md-sys-color-surface-container rounded-xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-sm font-medium text-md-sys-color-on-surface-variant">Students</p>
+                        <span class="material-symbols-outlined text-md-sys-color-secondary">school</span>
+                    </div>
+                    <p class="text-3xl font-normal text-md-sys-color-on-surface">
+                        <%= users.filter(u=> u.role === 'student').length %>
+                    </p>
+                </div>
+                <div class="bg-md-sys-color-surface-container rounded-xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-sm font-medium text-md-sys-color-on-surface-variant">Faculty</p>
+                        <span class="material-symbols-outlined text-md-sys-color-tertiary">badge</span>
+                    </div>
+                    <p class="text-3xl font-normal text-md-sys-color-on-surface">
+                        <%= users.filter(u=> u.role === 'faculty').length %>
+                    </p>
+                </div>
+                <div class="bg-md-sys-color-surface-container rounded-xl p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-sm font-medium text-md-sys-color-on-surface-variant">Admins</p>
+                        <span class="material-symbols-outlined text-md-sys-color-error">admin_panel_settings</span>
+                    </div>
+                    <p class="text-3xl font-normal text-md-sys-color-on-surface">
+                        <%= users.filter(u=> u.role === 'admin').length %>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Add New User Form -->
+            <div class="bg-md-sys-color-surface-container rounded-xl p-6">
+                <h3 class="text-xl font-normal text-md-sys-color-on-surface mb-4">Add New User</h3>
+                <form action="/admin/add-user" method="POST" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <input
+                        class="px-4 py-3 rounded-lg border border-md-sys-color-outline bg-md-sys-color-surface focus:border-md-sys-color-primary focus:ring-1 focus:ring-md-sys-color-primary outline-none transition-colors"
+                        name="fullname" placeholder="Full Name" required type="text" />
+                    <input
+                        class="px-4 py-3 rounded-lg border border-md-sys-color-outline bg-md-sys-color-surface focus:border-md-sys-color-primary focus:ring-1 focus:ring-md-sys-color-primary outline-none transition-colors"
+                        name="email" placeholder="Email" required type="email" />
+                    <input
+                        class="px-4 py-3 rounded-lg border border-md-sys-color-outline bg-md-sys-color-surface focus:border-md-sys-color-primary focus:ring-1 focus:ring-md-sys-color-primary outline-none transition-colors"
+                        name="password" placeholder="Password" required type="password" />
+                    <select
+                        class="px-4 py-3 rounded-lg border border-md-sys-color-outline bg-md-sys-color-surface focus:border-md-sys-color-primary focus:ring-1 focus:ring-md-sys-color-primary outline-none transition-colors"
+                        name="role" required>
+                        <option value="">Select Role...</option>
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <button
+                        class="px-6 py-3 rounded-full bg-md-sys-color-primary text-md-sys-color-on-primary font-medium hover:shadow-md transition-shadow flex items-center justify-center gap-2"
+                        type="submit">
+                        <span class="material-symbols-outlined text-[18px]">add</span>
+                        Add User
+                    </button>
+                </form>
+            </div>
+
+            <!-- User Management Table -->
+            <div class="bg-md-sys-color-surface rounded-xl border border-md-sys-color-outline-variant overflow-hidden">
+                <div
+                    class="px-6 py-4 bg-md-sys-color-surface-container-high border-b border-md-sys-color-outline-variant">
+                    <h3 class="text-lg font-medium text-md-sys-color-on-surface">User Management</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-md-sys-color-surface-container border-b border-md-sys-color-outline-variant">
+                                <th class="px-6 py-3 text-sm font-medium text-md-sys-color-on-surface-variant">ID</th>
+                                <th class="px-6 py-3 text-sm font-medium text-md-sys-color-on-surface-variant">Name</th>
+                                <th class="px-6 py-3 text-sm font-medium text-md-sys-color-on-surface-variant">Email
+                                </th>
+                                <th class="px-6 py-3 text-sm font-medium text-md-sys-color-on-surface-variant">Role</th>
+                                <th class="px-6 py-3 text-sm font-medium text-md-sys-color-on-surface-variant">Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-md-sys-color-outline-variant">
+                            <% users.forEach(u=> { %>
+                                <tr class="hover:bg-md-sys-color-surface-container-highest transition-colors">
+                                    <td class="px-6 py-4 text-md-sys-color-on-surface text-sm">
+                                        <%= u.id %>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="h-9 w-9 rounded-full bg-md-sys-color-primary-container text-md-sys-color-on-primary-container flex items-center justify-center font-bold text-sm">
+                                                <%= u.fullname.charAt(0) %>
+                                            </div>
+                                            <span class="text-md-sys-color-on-surface font-medium text-sm">
+                                                <%= u.fullname %>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-md-sys-color-on-surface-variant text-sm">
+                                        <%= u.email %>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <% let
+                                            badgeColor='bg-md-sys-color-primary-container text-md-sys-color-on-primary-container'
+                                            ; if (u.role==='faculty' )
+                                            badgeColor='bg-md-sys-color-secondary-container text-md-sys-color-on-secondary-container'
+                                            ; if (u.role==='admin' )
+                                            badgeColor='bg-md-sys-color-error-container text-md-sys-color-error' ; %>
+                                            <span
+                                                class="<%= badgeColor %> px-3 py-1 rounded-full text-xs font-medium capitalize">
+                                                <%= u.role %>
+                                            </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <form action="/admin/delete-user" method="POST" class="inline"
+                                            onsubmit="return confirm('Delete <%= u.fullname %>?')">
+                                            <input name="user_id" type="hidden" value="<%= u.id %>" />
+                                            <button
+                                                class="text-md-sys-color-error hover:bg-md-sys-color-error-container rounded-full p-2 transition-colors"
+                                                type="submit">
+                                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

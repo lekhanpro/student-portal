@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Student Portal - Login</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#111318",
+                        "surface-container": "#1d2024",
+                        "surface-container-high": "#282a2f",
+                        "on-surface": "#e2e2e6",
+                        "on-surface-variant": "#c4c7c8",
+                        "primary": "#80d5e2",
+                        "on-primary": "#00363d",
+                        "primary-container": "#004f58",
+                        "on-primary-container": "#a6eeff",
+                        "secondary-container": "#334b4f",
+                        "on-secondary-container": "#cfe6e9",
+                        "outline": "#8d9192",
+                        "outline-variant": "#434748",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                    },
+                    fontFamily: {
+                        "sans": ["Roboto", "sans-serif"],
+                        "display": ["Roboto", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "m3": "1.75rem",
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30)',
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .m3-input {
+            background-color: transparent;
+            border: 1px solid theme('colors.outline');
+            color: theme('colors.on-surface');
+            transition: all 0.2s ease;
+        }
+
+        .m3-input:focus {
+            border-color: theme('colors.primary');
+            border-width: 2px;
+            outline: none;
+            padding-left: calc(2.75rem - 1px);
+            padding-right: calc(1rem - 1px);
+        }
+
+        input[type="radio"]:checked+div {
+            background-color: theme('colors.secondary-container');
+            color: theme('colors.on-secondary-container');
+        }
+
+        input[type="radio"]:checked+div .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #1d2024 inset !important;
+            -webkit-text-fill-color: #e2e2e6 !important;
+            caret-color: #e2e2e6;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-surface text-on-surface font-sans min-h-screen flex items-center justify-center relative selection:bg-primary-container selection:text-on-primary-container">
+    <div class="relative z-10 w-full max-w-[420px] px-4 md:px-0">
+        <div class="bg-surface-container rounded-m3 p-6 sm:p-8 flex flex-col items-center w-full shadow-elevation-1">
+            <!-- Logo & Header -->
+            <div class="flex flex-col items-center mb-8 w-full">
+                <div class="mb-4 text-primary">
+                    <span class="material-symbols-outlined text-5xl">school</span>
+                </div>
+                <h1 class="text-2xl sm:text-[1.75rem] leading-9 font-normal text-on-surface mb-1">Welcome back</h1>
+                <p class="text-on-surface-variant text-sm tracking-wide">Please sign in to continue</p>
+            </div>
+
+            <% if (error) { %>
+                <div class="w-full mb-4 p-4 bg-error/10 border border-error/20 rounded-lg">
+                    <p class="text-error text-sm">⚠️ <%= error %>
+                    </p>
+                </div>
+                <% } %>
+
+                    <!-- Role Selector (Hidden, defaults to student) -->
+                    <input type="hidden" id="selected-role" value="student" />
+
+                    <!-- Login Form -->
+                    <form action="/login" method="POST" class="w-full flex flex-col gap-6">
+                        <!-- Email Field -->
+                        <div class="w-full relative">
+                            <div
+                                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-on-surface-variant">
+                                <span class="material-symbols-outlined text-[20px]">badge</span>
+                            </div>
+                            <input
+                                class="m3-input peer w-full rounded-[4px] py-3 pl-11 pr-4 text-base placeholder-transparent bg-transparent"
+                                id="email" name="email" placeholder="Email Address" type="email" required />
+                            <label
+                                class="absolute left-10 -top-2.5 bg-surface-container px-1 text-xs text-primary transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-on-surface-variant peer-placeholder-shown:top-3 peer-placeholder-shown:left-11 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary peer-focus:left-10"
+                                for="email">
+                                Email Address
+                            </label>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="w-full relative">
+                            <div
+                                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-on-surface-variant">
+                                <span class="material-symbols-outlined text-[20px]">lock</span>
+                            </div>
+                            <input
+                                class="m3-input peer w-full rounded-[4px] py-3 pl-11 pr-12 text-base placeholder-transparent bg-transparent"
+                                id="password" name="password" placeholder="Password" type="password" required />
+                            <button
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer focus:outline-none"
+                                type="button" onclick="togglePassword()">
+                                <span class="material-symbols-outlined text-[20px]"
+                                    id="visibility-icon">visibility</span>
+                            </button>
+                            <label
+                                class="absolute left-10 -top-2.5 bg-surface-container px-1 text-xs text-primary transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-on-surface-variant peer-placeholder-shown:top-3 peer-placeholder-shown:left-11 peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-primary peer-focus:left-10"
+                                for="password">
+                                Password
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button
+                            class="mt-2 w-full bg-primary text-on-primary font-medium text-sm py-2.5 px-6 rounded-full shadow-sm hover:shadow-md hover:bg-opacity-90 active:shadow-none transition-all duration-200 flex items-center justify-center gap-2 h-10"
+                            type="submit">
+                            Log In
+                        </button>
+                    </form>
+
+                    <!-- Demo Credentials -->
+                    <div class="mt-8 pt-0 w-full">
+                        <div class="credentials-hint bg-primary-container/20 border-l-4 border-primary rounded-lg p-4">
+                            <h6 class="text-primary font-semibold text-sm mb-2">📋 Demo Credentials</h6>
+                            <div class="space-y-1 text-xs text-on-surface-variant">
+                                <div><strong class="text-on-surface">Admin:</strong> admin@school.com / admin123</div>
+                                <div><strong class="text-on-surface">Faculty:</strong> teacher@school.com / teach123
+                                </div>
+                                <div><strong class="text-on-surface">Student:</strong> student@school.com / student123
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Links -->
+                        <div class="mt-6 flex justify-center gap-6 text-on-surface-variant/60 text-xs">
+                            <span class="hover:text-on-surface transition-colors cursor-pointer">Help</span>
+                            <span class="hover:text-on-surface transition-colors cursor-pointer">Privacy</span>
+                            <span class="hover:text-on-surface transition-colors cursor-pointer">Terms</span>
+                        </div>
+                    </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const visibilityIcon = document.getElementById('visibility-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                visibilityIcon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                visibilityIcon.textContent = 'visibility';
+            }
+        }
+    </script>
+</body>
+
+</html>
