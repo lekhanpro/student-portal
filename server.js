@@ -3,10 +3,108 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const Database = require('better-sqlite3');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
-const db = new Database('database.db');
+
+// Use /tmp for database in serverless environment (Vercel)
+const dbPath = process.env.VERCEL ? '/tmp/database.db' : 'database.db';
+const db = new Database(dbPath);
 const PORT = process.env.PORT || 3000;
+
+// Auto-seed database if tables don't exist
+function seedDatabase() {
+    try {
+        // Check if users table exists
+        const tableExists = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='users'").get();
+
+        if (!tableExists) {
+            console.log('📦 Seeding database...');
+
+            // Create tables
+            db.exec(`
+        CREATE TABLE users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email TEXT UNIQUE NOT NULL,
+          password TEXT NOT NULL,
+          role TEXT NOT NULL,
+          fullname TEXT NOT NULL
+        );
+
+        CREATE TABLE attendance (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          student_id INTEGER NOT NULL,
+          date TEXT NOT NULL,
+          status TEXT NOT NULL,
+          marked_by INTEGER NOT NULL,
+          FOREIGN KEY (student_id) REFERENCES users(id),
+          FOREIGN KEY (marked_by) REFERENCES users(id)
+        );
+
+        CREATE TABLE marks (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          student_id INTEGER NOT NULL,
+          subject TEXT NOT NULL,
+          marks INTEGER NOT NULL,
+          marked_by INTEGER NOT NULL,
+          date TEXT NOT NULL,
+          FOREIGN KEY (student_id) REFERENCES users(id),
+          FOREIGN KEY (marked_by) REFERENCES users(id)
+        );
+
+        CREATE TABLE assignments (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          student_id INTEGER NOT NULL,
+          title TEXT NOT NULL,
+          due_date TEXT NOT NULL,
+          status TEXT NOT NULL,
+          FOREIGN KEY (student_id) REFERENCES users(id)
+        );
+      `);
+
+            // Insert users
+            const insertUser = db.prepare('INSERT INTO users (email, password, role, fullname) VALUES (?, ?, ?, ?)');
+            insertUser.run('admin@school.com', 'admin123', 'admin', 'Admin User');
+            insertUser.run('teacher@school.com', 'teach123', 'faculty', 'Professor Smith');
+            insertUser.run('student@school.com', 'student123', 'student', 'John Doe');
+
+            // Get user IDs
+            const student = db.prepare('SELECT id FROM users WHERE role = ?').get('student');
+            const faculty = db.prepare('SELECT id FROM users WHERE role = ?').get('faculty');
+
+            // Insert sample attendance (last 7 days)
+            const insertAttendance = db.prepare('INSERT INTO attendance (student_id, date, status, marked_by) VALUES (?, ?, ?, ?)');
+            const today = new Date();
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                const status = i % 3 === 0 ? 'absent' : 'present';
+                insertAttendance.run(student.id, dateStr, status, faculty.id);
+            }
+
+            // Insert sample marks
+            const insertMarks = db.prepare('INSERT INTO marks (student_id, subject, marks, marked_by, date) VALUES (?, ?, ?, ?, ?)');
+            insertMarks.run(student.id, 'Mathematics', 85, faculty.id, '2026-01-10');
+            insertMarks.run(student.id, 'Physics', 78, faculty.id, '2026-01-11');
+            insertMarks.run(student.id, 'Chemistry', 92, faculty.id, '2026-01-12');
+            insertMarks.run(student.id, 'English', 88, faculty.id, '2026-01-13');
+
+            // Insert sample assignments
+            const insertAssignment = db.prepare('INSERT INTO assignments (student_id, title, due_date, status) VALUES (?, ?, ?, ?)');
+            insertAssignment.run(student.id, 'Math Assignment - Calculus Problems', '2026-01-20', 'submitted');
+            insertAssignment.run(student.id, 'Physics Lab Report - Pendulum Experiment', '2026-01-22', 'pending');
+            insertAssignment.run(student.id, 'Chemistry Essay - Organic Compounds', '2026-01-25', 'pending');
+
+            console.log('✅ Database seeded successfully!');
+        }
+    } catch (error) {
+        console.error('❌ Seeding error:', error);
+    }
+}
+
+// Seed database on startup
+seedDatabase();
 
 // Middleware
 app.set('view engine', 'ejs');
